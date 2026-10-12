@@ -1,0 +1,1576 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cuaderno Tema I</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap">
+<style>
+  /* Layout: cabecera con pestañas; teoría en columna de lectura y ejercicios en dos columnas (resueltos | por resolver). */
+  :root {
+    --bg: #F4F6F8;
+    --surface: #FFFFFF;
+    --ink: #17202A;
+    --muted: #55616D;
+    --line: #D9DFE5;
+    --accent: #0E6B63;
+    --accent-ink: #FFFFFF;
+    --accent-soft: #E0F0EE;
+    --warn: #8F4708;
+    --warn-soft: #FBECDD;
+    --bad: #A32020;
+    --bad-soft: #FBE4E4;
+    --code: #EDF0F3;
+    --font-display: "Newsreader", Georgia, "Times New Roman", serif;
+    --font-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --font-mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #11161B; --surface: #19212A; --ink: #E6EBF0; --muted: #9DA9B5; --line: #2C3743;
+      --accent: #4FC3B7; --accent-ink: #0B1B19; --accent-soft: #16302E;
+      --warn: #F0A15E; --warn-soft: #33241A; --bad: #FF8F8F; --bad-soft: #3A1F1F; --code: #202A34;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #11161B; --surface: #19212A; --ink: #E6EBF0; --muted: #9DA9B5; --line: #2C3743;
+    --accent: #4FC3B7; --accent-ink: #0B1B19; --accent-soft: #16302E;
+    --warn: #F0A15E; --warn-soft: #33241A; --bad: #FF8F8F; --bad-soft: #3A1F1F; --code: #202A34;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  html { color-scheme: light; }
+  body { margin: 0; }
+  body {
+    background: var(--bg); color: var(--ink); font-family: var(--font-body);
+    font-size: 16px; line-height: 1.6; padding-inline: 16px; padding-block: 0 56px;
+  }
+  .wrap { max-width: 96rem; margin-inline: auto; }
+  header.top { padding-block: 24px 12px; max-width: 60rem; }
+  header.top p { margin: 0; color: var(--muted); font-size: 0.875rem; }
+  header.top h1 {
+    font-family: var(--font-display); font-weight: 600; font-size: clamp(1.75rem, 5vw, 2.4rem);
+    line-height: 1.15; margin: 4px 0 6px; text-wrap: balance;
+  }
+  .bar {
+    position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5;
+    background: var(--bg); padding-block: 8px; border-bottom: 1px solid var(--line);
+  }
+  .tabs { display: flex; gap: 6px; overflow-x: auto; padding-block: 2px 6px; scrollbar-width: thin; }
+  .tab {
+    flex: 0 0 auto; font: inherit; font-size: 0.875rem; font-weight: 500; cursor: pointer;
+    color: var(--muted); background: transparent; border: 1px solid var(--line);
+    border-radius: 6px; padding: 6px 12px; display: flex; gap: 8px; align-items: baseline;
+  }
+  .tab .n { font-family: var(--font-mono); font-size: 0.8rem; }
+  .tab[aria-selected="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+  .tab:focus-visible, summary:focus-visible, textarea:focus-visible, input:focus-visible, button:focus-visible {
+    outline: 2px solid var(--accent); outline-offset: 2px;
+  }
+  main { padding-block: 24px; }
+  .panel h2 { font-family: var(--font-display); font-size: 1.85rem; line-height: 1.2; margin: 0 0 4px; text-wrap: balance; }
+  .src { color: var(--muted); font-size: 0.875rem; margin: 0 0 20px; max-width: 60rem; }
+  .src b { font-weight: 600; color: var(--ink); }
+  .panel h3.sec {
+    font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted);
+    margin: 36px 0 12px; font-weight: 600; border-top: 1px solid var(--line); padding-top: 16px;
+  }
+  /* La teoría fluye en columnas de ~26rem para aprovechar el ancho; los bloques no se parten entre columnas. */
+  .theory { column-width: 26rem; column-gap: 48px; }
+  .theory h4, .prose h4 { font-family: var(--font-display); font-size: 1.2rem; margin: 22px 0 6px; break-after: avoid; break-inside: avoid; }
+  .theory h4:first-child, .prose h4:first-child { margin-top: 0; }
+  .theory p, .prose p { margin: 0 0 12px; }
+  .theory ul, .theory ol, .prose ul, .prose ol { padding-left: 1.3rem; margin: 0 0 12px; }
+  .theory li, .prose li { margin-bottom: 4px; break-inside: avoid; }
+  .theory p, .theory .def, .theory .note, .theory .tblwrap, .theory pre { break-inside: avoid; }
+  .tip { background: var(--accent-soft); border-radius: 8px; padding: 12px 16px; margin: 12px 0 16px; break-inside: avoid; }
+  .tip p:last-child { margin-bottom: 0; }
+  .mode { display: inline-flex; margin-top: 10px; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+  .mode button {
+    font: inherit; font-size: 0.875rem; font-weight: 500; cursor: pointer; padding: 6px 14px;
+    background: transparent; color: var(--muted); border: 0; border-right: 1px solid var(--line);
+  }
+  .mode button:last-child { border-right: 0; }
+  .mode button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
+  .easy-banner { background: var(--accent-soft); border-radius: 8px; padding: 10px 14px; margin: 0 0 16px; font-size: 0.9rem; max-width: 60rem; }
+  .bottom { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: start; }
+  .bottom.single { grid-template-columns: 1fr; }
+  @media (max-width: 52rem) { .bottom { grid-template-columns: 1fr; } }
+  .bottom .col > h4 { margin-bottom: 12px; }
+  .def { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 12px 16px; margin: 12px 0 16px; }
+  .def p:last-child { margin-bottom: 0; }
+  .note { background: var(--warn-soft); border-radius: 8px; padding: 12px 16px; margin: 16px 0; border: 1px solid var(--warn); }
+  .note strong { color: var(--warn); }
+  code, .m { font-family: var(--font-mono); font-size: 0.9em; }
+  code { background: var(--code); padding: 1px 5px; border-radius: 4px; }
+  pre {
+    background: var(--code); border-radius: 8px; padding: 12px 16px; margin: 0 0 14px;
+    overflow-x: auto; font-family: var(--font-mono); font-size: 0.85rem; line-height: 1.5;
+  }
+  pre code { background: none; padding: 0; }
+  .tblwrap { overflow-x: auto; margin: 0 0 16px; }
+  table { border-collapse: collapse; font-size: 0.9rem; min-width: 18rem; }
+  th, td { border: 1px solid var(--line); padding: 6px 12px; text-align: left; font-variant-numeric: tabular-nums; vertical-align: top; }
+  th { background: var(--accent-soft); font-weight: 600; }
+  details.faq { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; margin-bottom: 8px; }
+  details.faq summary { cursor: pointer; padding: 10px 14px; font-weight: 500; }
+  details.faq .a { padding: 0 14px 12px; }
+  details.faq .a p { margin: 0 0 8px; }
+  .group-title { font-family: var(--font-display); font-size: 1.3rem; margin: 28px 0 4px; }
+  .group-intro { color: var(--muted); font-size: 0.9rem; margin: 0 0 12px; }
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; }
+  @media (max-width: 52rem) { .cols { grid-template-columns: 1fr; } }
+  .col { min-width: 0; }
+  .col > h4 {
+    margin: 0 0 10px; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600;
+  }
+  .col.l > h4 { color: var(--accent); }
+  .col.r > h4 { color: var(--warn); }
+  .ex { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; margin: 0 0 10px; }
+  .ex-q { padding: 12px 14px 8px; display: flex; gap: 10px; align-items: baseline; }
+  .ex-n { font-family: var(--font-mono); font-size: 0.8rem; color: var(--muted); flex: 0 0 auto; }
+  .ex-q p { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+  .check { display: flex; gap: 8px; padding: 0 14px 10px; flex-wrap: wrap; align-items: center; }
+  .check input[type="text"] {
+    flex: 1 1 10rem; min-width: 0; font: inherit; font-family: var(--font-mono); font-size: 0.9rem;
+    background: var(--bg); color: var(--ink); border: 1px solid var(--line); border-radius: 6px; padding: 6px 10px;
+  }
+  .btn {
+    font: inherit; font-size: 0.875rem; font-weight: 500; cursor: pointer; border-radius: 6px; padding: 6px 12px;
+    border: 1px solid var(--accent); background: var(--accent); color: var(--accent-ink);
+  }
+  .verdict { font-size: 0.875rem; font-weight: 600; flex: 0 0 100%; }
+  .verdict.ok { color: var(--accent); }
+  .verdict.bad { color: var(--bad); }
+  .ex.is-ok { border-color: var(--accent); }
+  .ex.is-bad { border-color: var(--bad); }
+  details.sol { border-top: 1px solid var(--line); }
+  details.sol summary { cursor: pointer; padding: 9px 14px; font-weight: 500; color: var(--accent); list-style: none; font-size: 0.9rem; }
+  details.sol summary::-webkit-details-marker { display: none; }
+  details.sol summary::before { content: "▸ "; }
+  details.sol[open] summary::before { content: "▾ "; }
+  .steps { margin: 0; padding: 0 14px 12px 2.1rem; font-size: 0.92rem; }
+  .steps li { margin-bottom: 6px; padding-left: 4px; }
+  .res { margin: 0 14px 12px; padding: 8px 12px; background: var(--accent-soft); border-radius: 6px; font-weight: 500; font-size: 0.92rem; }
+  .badge-n { font-family: var(--font-mono); font-size: 0.7rem; opacity: 0.85; }
+  @media (prefers-reduced-motion: no-preference) { .panel { animation: in 0.15s ease-out; } }
+  @keyframes in { from { opacity: 0.4; } to { opacity: 1; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <p>Fundamentos Algebraicos para la IA · UNED 26-27 · cód. 71031027</p>
+    <h1>Tema I · Escalares</h1>
+    <p>Una pestaña por apartado del texto base (pp. 15–53). Cada una tiene explicación con fuente, ejercicios resueltos (izquierda) y por resolver (derecha), y dudas frecuentes con Python al final. La pestaña 0 repasa lo que el libro da por sabido.</p>
+    <div class="mode" id="mode" role="group" aria-label="Nivel de la explicación"></div>
+  </header>
+  <div class="bar"><div class="tabs" role="tablist" id="tabs" aria-label="Apartados del Tema I"></div></div>
+  <main id="main"></main>
+</div>
+
+<script>
+const TABS = [];
+const E = (q, steps, res) => ({ q, steps, res });
+const T = (q, type, ans, steps, res) => ({ q, type, ans, steps, res });
+
+/* ================= 1.1 LÓGICA ================= */
+TABS.push({
+  id: "logica", num: "1.1", name: "Lógica", pg: "p. 15",
+  src: "<b>Fuente:</b> <i>Fundamentos algebraicos para la IA</i>, apartado 1.1, p. 15. Los ejercicios son propios, construidos con la definición del texto.",
+  theory: `
+    <p>El texto usa la lógica de forma <b>informal</b>: casi solo emplea los símbolos de implicación (⇒) y de equivalencia (⇔), "más por brevedad que por rigor". Prefiere el lenguaje natural.</p>
+    <div class="def"><p><b>Implicación.</b> Si P y Q son proposiciones con variables, "P ⇒ Q" significa que <b>no se cumple "P y no Q" para ningún valor de las variables</b>.</p></div>
+    <h4>Cómo se usa en la práctica</h4>
+    <ul>
+      <li>Para <b>refutar</b> una implicación basta un <b>contraejemplo</b>: un valor que haga cierta P y falsa Q.</li>
+      <li>Para <b>probarla</b> hay que razonar con un valor cualquiera, no con ejemplos sueltos.</li>
+      <li>Si P es falsa para un valor, ese valor no refuta nada.</li>
+    </ul>
+    <p>El texto advierte que los ejemplos cotidianos ("si llueve, me mojo") confunden, porque ahí la implicación arrastra causalidad o tiempo y en matemáticas no. Por eso sus ejemplos salen de las propias matemáticas.</p>`,
+  faq: [],
+  groups: [{
+    title: "Implicaciones: ¿verdadera (V) o falsa (F)?",
+    intro: "Responde V o F. Si es falsa, busca el contraejemplo; la solución paso a paso lo muestra.",
+    solved: [
+      E("Para x real: «x &gt; 3 ⇒ x² &gt; 9».", ["Sería falsa solo si existiera x con x &gt; 3 y x² ≤ 9.", "Si x &gt; 3, x es positivo; multiplicando x &gt; 3 por x queda x² &gt; 3x.", "Y 3x &gt; 9 porque x &gt; 3. Encadenando, x² &gt; 9."], "V: no hay contraejemplo."),
+      E("Para x real: «x² = 4 ⇒ x = 2».", ["Busca x con x² = 4 y x ≠ 2.", "x = −2 cumple (−2)² = 4 pero −2 ≠ 2."], "F: contraejemplo x = −2."),
+      E("Para x natural: «x es múltiplo de 10 ⇒ x es múltiplo de 5».", ["Escribe x = 10k con k natural.", "10k = 5 · (2k), y 2k es natural."], "V."),
+      E("Para x real: «x &gt; 5 ⇒ x &gt; 2».", ["Si x &gt; 5 y 5 &gt; 2, entonces x &gt; 2."], "V."),
+      E("Para n natural: «n es par ⇒ n² es par».", ["n par significa n = 2k.", "n² = 4k² = 2 · (2k²), que es par."], "V.")
+    ],
+    todo: [
+      T("Para x natural: «x es múltiplo de 6 ⇒ x es par».", "vf", "V", ["x = 6k = 2 · (3k), luego es par."], "V."),
+      T("Para x real: «x² &gt; 1 ⇒ x &gt; 1».", "vf", "F", ["Prueba x = −2: x² = 4 &gt; 1, pero −2 no es mayor que 1."], "F: contraejemplo x = −2."),
+      T("Para x natural: «x es primo ⇒ x es impar».", "vf", "F", ["El 2 es primo y es par."], "F: contraejemplo x = 2."),
+      T("Para x real: «x &gt; 0 ⇒ x² &gt; 0».", "vf", "V", ["Producto de dos positivos es positivo."], "V."),
+      T("Para x natural: «x es múltiplo de 3 ⇒ x es múltiplo de 6».", "vf", "F", ["x = 3 es múltiplo de 3 pero no de 6."], "F: contraejemplo x = 3.")
+    ]
+  }],
+  py: `
+    <h4>Buscar contraejemplos con un bucle</h4>
+    <p>En Python, "P ⇒ Q" se puede escribir como <code>(not P) or Q</code> (equivalencia lógica estándar; no sale en el texto). Así se buscan contraejemplos probando valores:</p>
+<pre><code>def implica(p, q):
+    return (not p) or q       # falsa solo si p es cierta y q falsa
+
+for x in range(-5, 6):
+    if not implica(x**2 == 4, x == 2):
+        print("contraejemplo:", x)    # imprime: contraejemplo: -2</code></pre>
+    <p>Un bucle solo <b>refuta</b>; que no encuentre ningún contraejemplo entre unos pocos valores no demuestra que sea verdadera.</p>`
+});
+
+/* ================= 1.2 CONJUNTOS ================= */
+TABS.push({
+  id: "conjuntos", num: "1.2", name: "Conjuntos", pg: "pp. 16–18",
+  src: "<b>Fuente:</b> apartado 1.2, pp. 16–18 (Ejemplos 1 a 3 y Figura 1). Ejercicios propios.",
+  theory: `
+    <h4>Qué es un conjunto</h4>
+    <p>Un conjunto queda determinado <b>solo por sus elementos</b>. No se definen "conjunto" ni "elemento"; lo importante es la relación de <b>pertenencia</b>: b ∈ A se lee "b pertenece a A", es decir, "b es un elemento <i>de</i> A". El texto insiste: nunca digas "a es un elemento", sino "a es un elemento <i>de</i>…". Un símbolo tachado (∉) significa la negación.</p>
+    <h4>Llaves, orden y repeticiones</h4>
+    <p>Las llaves { } describen un conjunto por <b>extensión</b> (listando elementos) y no se usan para nada más. El orden y las repeticiones no cuentan:</p>
+    <p class="m">{a, b} = {b, a} &nbsp;&nbsp; {a, a} = {a}</p>
+    <p>El conjunto sin elementos es el <b>vacío</b> ∅, y solo hay uno.</p>
+    <h4>El símbolo ":" significa "tales que"</h4>
+    <p>Sirve para definir un conjunto por una <b>condición</b>, siempre sobre un conjunto de partida ya fijado:</p>
+    <p class="m">{ x ∈ {a, b, u} : x es una vocal } = {a, u}</p>
+    <p>Se lee: "los x del conjunto {a, b, u} tales que x es una vocal". Se pasa cada elemento por la condición y se queda con los que cumplen. Otro ejemplo del texto: {n ∈ ℕ : n &lt; 7} = {0, 1, 2, 3, 4, 5, 6}. El texto avisa de que {B : B tiene más de un elemento} no está bien formado, porque no dice de qué conjunto sale B.</p>
+    <h4>Operaciones</h4>
+    <div class="tblwrap"><table>
+      <tr><th>Símbolo</th><th>Se lee</th><th>Con A = {1,2,3,4} y B = {3,4,5}</th></tr>
+      <tr><td class="m">A ∩ B</td><td>intersección: está en A <b>y</b> en B</td><td class="m">{3, 4}</td></tr>
+      <tr><td class="m">A ∪ B</td><td>unión: está en A <b>o</b> en B</td><td class="m">{1, 2, 3, 4, 5}</td></tr>
+      <tr><td class="m">A \\ B</td><td>complementario relativo: de A, lo que no está en B</td><td class="m">{1, 2}</td></tr>
+      <tr><td class="m">A ⊆ B</td><td>subconjunto: todo elemento de A es de B</td><td class="m">{3, 4} ⊆ A</td></tr>
+    </table></div>
+    <h4>A \\ B y A − B no son lo mismo</h4>
+    <p>El texto lo señala expresamente. <b>A \\ B</b> quita elementos. <b>A − B</b> solo existe si hay una resta (por ejemplo en ℝ) y es el conjunto de todas las restas a − b con a ∈ A, b ∈ B. Con {1, 2, 5}:</p>
+    <p class="m">{1,2,5} \\ {1,2} = {5} &nbsp;&nbsp; {1,2,5} − {1,2} = {0, −1, 1, 4, 3}</p>
+    <p>En el segundo caso salen 1−1 = 0, 1−2 = −1, 2−1 = 1, 2−2 = 0, 5−1 = 4, 5−2 = 3; el 0 sale dos veces pero en un conjunto no se repite.</p>
+    <h4>∈ frente a ⊆</h4>
+    <p>∈ relaciona un <b>elemento</b> con un conjunto; ⊆ relaciona dos <b>conjuntos</b>. Con A = {1, 2}: 1 ∈ A es cierto, {1} ⊆ A es cierto, pero {1} ∈ A es falso (el elemento de A es el número 1, no el conjunto {1}).</p>
+    <h4>El conjunto de las partes ℘(X)</h4>
+    <p>La "p rara" es una ℘ (P manuscrita). ℘(X) es <b>el conjunto de todos los subconjuntos de X</b>; incluye ∅ y X. Es un conjunto cuyos elementos son conjuntos. Para no olvidarte ninguno, ordénalos por tamaño. Con X = {1, 2, 3}:</p>
+    <div class="tblwrap"><table>
+      <tr><th>Tamaño</th><th>Subconjuntos</th></tr>
+      <tr><td>0</td><td class="m">∅</td></tr>
+      <tr><td>1</td><td class="m">{1}, {2}, {3}</td></tr>
+      <tr><td>2</td><td class="m">{1,2}, {1,3}, {2,3}</td></tr>
+      <tr><td>3</td><td class="m">{1,2,3}</td></tr>
+    </table></div>
+    <p>Son 8 en total (1 + 3 + 3 + 1). Con {a, b} salen 4 (ejemplo del texto: ℘({a,b}) = {∅, {a}, {b}, {a,b}}). La regla 2ⁿ es matemática general: no aparece en este tramo del texto.</p>
+    <h4>Unión general ⋃</h4>
+    <p>Dada una colección 𝔅 de conjuntos, ⋃𝔅 reúne los x que están en <b>algún</b> conjunto de la colección. A ∪ B es el caso de una colección de dos: A ∪ B = ⋃{A, B}. La 𝔅 es solo una letra con otra tipografía: el nombre de la colección. Las tipografías se usan para marcar niveles (minúsculas para elementos, mayúsculas para conjuntos, caligráficas para colecciones).</p>
+    <h4>El universo y los "pisos" (p. 18)</h4>
+    <p>Normalmente se trabaja dentro de un universo U. Sus elementos están en la <b>planta baja</b>; los conjuntos de elementos, en ℘(U) (primera planta); las colecciones de conjuntos, en ℘(℘(U)). Cada piso es un nuevo nivel de empaquetamiento, no un objeto más grande. Regla práctica: no se baja al sótano (no se pregunta qué hay "dentro" de un número) y rara vez se pasa de la tercera planta.</p>
+    <h4>Conjunto, tupla y familia</h4>
+    <div class="tblwrap"><table>
+      <tr><th></th><th>Orden</th><th>Repetidos</th></tr>
+      <tr><td>Conjunto</td><td>no importa</td><td>no cuentan</td></tr>
+      <tr><td>Tupla (apartado 1.3)</td><td>importa</td><td>permitidos</td></tr>
+      <tr><td>Familia (apartado 1.5)</td><td>por etiqueta (índice)</td><td>permitidos</td></tr>
+    </table></div>`,
+  faq: [
+    { q: "¿Los diagramas de Venn se parecen a los JOIN de SQL?", a: "<p>Sí, en el dibujo: la Figura 1 (p. 18) es un diagrama de Venn, y los diagramas que se usan para explicar los JOIN también. Correspondencia aproximada: INNER JOIN ≈ A ∩ B, FULL OUTER JOIN ≈ A ∪ B, y un LEFT JOIN quedándote solo con lo que no coincide ≈ A \\ B.</p><p>Es una analogía de dibujo, no del texto (el texto no menciona SQL): un JOIN empareja filas por una clave, no hace estrictamente una unión de conjuntos.</p>" },
+    { q: "¿Qué es \"cerrado\" y qué es M? (viene en el apartado 1.4)", a: "<p>M es solo el nombre de un subconjunto cualquiera (como una variable). En 1.4 se pregunta si, al operar elementos de M, el resultado sigue en M. Está explicado en la pestaña 1.4.</p>" }
+  ],
+  groups: [{
+    title: "Operaciones con conjuntos",
+    intro: "Escribe los conjuntos con llaves y comas; el orden da igual. ∅ se puede escribir {} o ∅. En V/F responde V o F.",
+    solved: [
+      E("A = {2, 4, 6, 8}, B = {4, 8, 12}. Calcula A ∪ B.", ["Junta todos los elementos de A y de B sin repetir."], "{2, 4, 6, 8, 12}"),
+      E("Mismos A y B. Calcula A ∩ B.", ["Los elementos que están en los dos: 4 y 8."], "{4, 8}"),
+      E("Mismos A y B. Calcula A \\ B.", ["A \\ B = lo de A que no está en B.", "A tiene 2, 4, 6, 8; quita 4 y 8."], "{2, 6}"),
+      E("¿Cuántos elementos tiene ℘({a, b, c})?", ["Ordena por tamaño: ∅ (1); {a},{b},{c} (3); {a,b},{a,c},{b,c} (3); {a,b,c} (1).", "1 + 3 + 3 + 1 = 8."], "8"),
+      E("A = {3, 5}, B = {1, 2}. Calcula A − B (restas de números).", ["3−1 = 2, 3−2 = 1, 5−1 = 4, 5−2 = 3.", "Reúnelos como conjunto."], "{1, 2, 3, 4}"),
+      E("¿Verdadero o falso? ∅ ⊆ A para cualquier conjunto A.", ["No hay ningún elemento de ∅ que no esté en A (no tiene elementos), así que se cumple."], "V")
+    ],
+    todo: [
+      T("A = {0, 1, 2, 3}, B = {2, 3, 4, 5}. Calcula A ∪ B.", "set", "{0,1,2,3,4,5}", ["Junta sin repetir."], "{0, 1, 2, 3, 4, 5}"),
+      T("Mismos A y B. Calcula A ∩ B.", "set", "{2,3}", ["Los comunes: 2 y 3."], "{2, 3}"),
+      T("Mismos A y B. Calcula B \\ A.", "set", "{4,5}", ["De B quita 2 y 3 (están en A)."], "{4, 5}"),
+      T("Escribe por extensión {n ∈ ℕ : n &lt; 6, n impar}.", "set", "{1,3,5}", ["ℕ incluye el 0 en este texto: 0,1,2,3,4,5.", "De ellos, los impares: 1, 3, 5."], "{1, 3, 5}"),
+      T("Escribe ℘({1, 2}).", "set", "{∅,{1},{2},{1,2}}", ["Por tamaño: ∅; {1}, {2}; {1,2}."], "{∅, {1}, {2}, {1, 2}}"),
+      T("Con A = {1, 2}: ¿es verdadero {1} ∈ A?", "vf", "F", ["El elemento de A es el número 1, no el conjunto {1}. Lo correcto sería {1} ⊆ A."], "F")
+    ]
+  }],
+  py: `
+    <h4>Conjuntos en Python</h4>
+    <p>Python tiene el tipo <code>set</code> con llaves, igual que en matemáticas. Los repetidos desaparecen solos.</p>
+<pre><code>A = {2, 4, 6, 8}
+B = {4, 8, 12}
+print(A | B)        # unión          {2, 4, 6, 8, 12}
+print(A &amp; B)        # intersección   {4, 8}
+print(A - B)        # diferencia A \\ B   {2, 6}
+print(4 in A)       # pertenencia ∈  True
+print({4, 8} &lt;= A)  # subconjunto ⊆  True
+print({1, 1, 2})    # {1, 2}: no hay repetidos</code></pre>
+    <p><b>Ojo:</b> en Python el signo <code>-</code> entre conjuntos es la diferencia A \\ B, no la resta de números A − B del texto. Esta última se hace así:</p>
+<pre><code>A = {1, 2, 5}; B = {1, 2}
+print({a - b for a in A for b in B})    # {0, -1, 1, 4, 3}</code></pre>
+    <h4>Conjunto de las partes</h4>
+<pre><code>from itertools import combinations
+
+def partes(X):
+    X = list(X)
+    return [set(c) for r in range(len(X) + 1) for c in combinations(X, r)]
+
+print(partes({1, 2, 3}))   # 8 subconjuntos: de tamaño 0, 1, 2 y 3</code></pre>
+    <p>La función recorre los tamaños r = 0, 1, 2, … y para cada uno toma todas las combinaciones, tal como se ordenaba la lista a mano.</p>`
+});
+
+/* ================= 1.3 TUPLAS ================= */
+TABS.push({
+  id: "tuplas", num: "1.3", name: "Tuplas y producto cartesiano", pg: "pp. 19–21",
+  src: "<b>Fuente:</b> apartado 1.3, pp. 19–21 (Ejemplos 4 a 7). Ejercicios propios.",
+  theory: `
+    <h4>Par ordenado</h4>
+    <p>En un conjunto el orden no cuenta ({a, b} = {b, a}), pero en un <b>par ordenado</b> sí: (a, b) ≠ (b, a) si a ≠ b. El texto lo define como (a, b) = {{a}, {a, b}}, un truco para fabricar el orden con conjuntos; después "se olvidan los detalles técnicos". No tiene relación con ℘ (que es el conjunto de partes).</p>
+    <div class="def">
+      <p><b>n-tupla</b>: una lista ordenada de n elementos, posiblemente repetidos. Se construye encadenando: (a₁, …, aₙ) = ((a₁, …, aₙ₋₁), aₙ).</p>
+      <p><b>Propiedad fundamental:</b> (a₁,…,aₙ) = (b₁,…,bₘ) si y solo si n = m y a₁ = b₁, …, aₙ = bₙ.</p>
+    </div>
+    <p>Ejemplo 5 del texto: (1,1,2) ≠ (1,2,1) ≠ (1,2).</p>
+    <h4>Producto cartesiano</h4>
+    <p>A × B = {(a, b) : a ∈ A, b ∈ B}: <b>todos los pares posibles</b> con la primera componente en A y la segunda en B. A × A se escribe A². Si A tiene n elementos, A² tiene n². Ejemplo 4: {a, b} × {a, b, c} = {(a,a), (a,b), (a,c), (b,a), (b,b), (b,c)}. Y ℝ² = {(x, y) : x, y ∈ ℝ} es el plano.</p>
+    <p>Una manera de verlo: fija el primer elemento de A y recorre todos los de B; luego pasa al siguiente. Con 2 camisetas y 3 pantalones salen 2 · 3 = 6 conjuntos de ropa (ejemplo propio).</p>
+    <p>La × del producto cartesiano <b>no es multiplicar</b>: es el símbolo que construye pares. El texto avisa en la p. 19 de que el significado de los símbolos depende del contexto.</p>
+    <h4>Relaciones</h4>
+    <p>Una <b>relación</b> en X es un subconjunto R de X × X: de todos los pares posibles te quedas solo con los que cumplen algo. En vez de (x₁, x₂) ∈ R se escribe x₁ R x₂.</p>
+    <p>Método: escribe todos los pares de X × X, comprueba cada uno con la condición y guarda los que la cumplen. Con X = {1, 2, 3} y la condición "x &lt; y" quedan (1,2), (1,3), (2,3).</p>
+    <p>Las relaciones de <b>orden</b> se escriben con "&lt;" y cumplen dos propiedades: ningún elemento es menor que sí mismo, y si a &lt; b y b &lt; c entonces a &lt; c. Es <b>total</b> si cualquier par de elementos está relacionado; si no, es <b>parcial</b>. El diccionario ordena las palabras de forma total; "ser descendiente de" es parcial (dos personas sin parentesco no están relacionadas). En este texto, "orden" significa "orden estricto y total".</p>`,
+  faq: [
+    { q: "¿El par ordenado es como la ℘ manuscrita?", a: "<p>No. ℘(X) es el conjunto de todos los subconjuntos de X. El par ordenado (a, b) es una lista de dos elementos donde importa el orden. No tienen relación.</p>" },
+    { q: "¿(a, b, c) es {a}, {a,b}, {a,b,c}?", a: "<p>No. Es una definición distinta: (a, b) = {{a}, {a, b}} solo para pares, y las n-tuplas se encadenan: (a, b, c) = ((a, b), c). Lo único que debes recordar es la propiedad fundamental: misma longitud y misma componente en cada posición.</p>" },
+    { q: "¿Cómo se escribe la relación \"igual a\" en {1,2,3}?", a: "<p>Recorres los 9 pares y guardas los que tienen los dos números iguales: (1,1), (2,2), (3,3).</p>" }
+  ],
+  groups: [{
+    title: "Producto cartesiano, tuplas y relaciones",
+    intro: "Las tuplas se escriben con paréntesis y comas: (1,3). Los conjuntos de pares con llaves: {(1,3),(2,2)}.",
+    solved: [
+      E("A = {1, 2}, B = {x, y, z}. ¿Cuántos elementos tiene A × B?", ["Fija 1 y recorre B: (1,x), (1,y), (1,z).", "Fija 2: (2,x), (2,y), (2,z).", "2 · 3 = 6 pares."], "6"),
+      E("A = {0, 1}. ¿Cuántos elementos tiene A³?", ["Una terna tiene 3 posiciones y cada una admite 2 valores.", "2 · 2 · 2 = 8. (El texto da n² para A²; para A³ se extiende igual.)"], "8"),
+      E("¿Es cierto (1, 2, 2) = (1, 2)?", ["Tienen distinta longitud (3 y 2), así que no son iguales."], "F"),
+      E("Halla x, y para que (x+1, 3) = (5, y−2). Responde «x,y».", ["Posición a posición: x + 1 = 5, luego x = 4.", "3 = y − 2, luego y = 5."], "4,5"),
+      E("En X = {1, 2, 3}, la relación «x &lt; y» ¿cuántos pares tiene?", ["De los 9 pares, cumplen: (1,2), (1,3), (2,3)."], "3"),
+      E("¿Es cierto (1, 2) = (2, 1)?", ["Las primeras componentes son 1 y 2: distintas."], "F")
+    ],
+    todo: [
+      T("A = {a, b}, B = {1, 2, 3}. ¿Cuántos elementos tiene B × A?", "num", "6", ["3 · 2 = 6."], "6"),
+      T("En X = {1, 2, 3}, escribe la relación «x + y = 4».", "set", "{(1,3),(2,2),(3,1)}", ["Revisa los 9 pares y guarda los de suma 4."], "{(1,3), (2,2), (3,1)}"),
+      T("Halla x, y para que (2x, y+1) = (8, 3). Responde «x,y».", "seq", "4,2", ["2x = 8 → x = 4.", "y + 1 = 3 → y = 2."], "4,2"),
+      T("¿Cuántos elementos tiene {1, 2, 3}²?", "num", "9", ["3² = 9."], "9"),
+      T("En X = {1, 2, 3}, escribe la relación «x = y».", "set", "{(1,1),(2,2),(3,3)}", ["Guarda solo los pares con las dos componentes iguales."], "{(1,1), (2,2), (3,3)}"),
+      T("¿Es cierto {1, 2} = {2, 1}?", "vf", "V", ["En un conjunto el orden no importa."], "V")
+    ]
+  }],
+  py: `
+    <h4>Tuplas y producto cartesiano</h4>
+<pre><code>(1, 2) == (2, 1)       # False: en una tupla el orden importa
+{1, 2} == {2, 1}       # True:  en un conjunto no
+(1, 2, 2) == (1, 2)    # False: distinta longitud</code></pre>
+    <p>El producto cartesiano se hace con <code>itertools.product</code>:</p>
+<pre><code>from itertools import product
+A = [1, 2]
+B = ["x", "y", "z"]
+print(list(product(A, B)))
+# [(1,'x'), (1,'y'), (1,'z'), (2,'x'), (2,'y'), (2,'z')]  → 6 pares
+print(len(list(product(A, repeat=3))))   # A³ → 8</code></pre>
+    <h4>Una relación como lista de pares</h4>
+<pre><code>X = [1, 2, 3]
+R = [(x, y) for x in X for y in X if x + y == 4]
+print(R)   # [(1, 3), (2, 2), (3, 1)]</code></pre>
+    <p>Los dos <code>for</code> recorren los 9 pares de X × X y el <code>if</code> es la condición de la relación.</p>`
+});
+
+/* ================= 1.4 FUNCIONES ================= */
+TABS.push({
+  id: "funciones", num: "1.4", name: "Funciones y operaciones", pg: "pp. 21–22",
+  src: "<b>Fuente:</b> apartado 1.4, pp. 21–22 (Ejemplos 8 a 10). Ejercicios propios.",
+  theory: `
+    <h4>Función</h4>
+    <div class="def"><p>Una función f : X → Y es una <b>regla que asigna a cada elemento del dominio X un único elemento del conjunto final Y</b>. Formalmente es un subconjunto de X × Y tal que para cada x existe un único y con (x, y) ∈ f; se escribe y = f(x).</p></div>
+    <ul>
+      <li>X es el <b>dominio</b> (entradas) e Y el <b>conjunto final</b> (donde viven las salidas).</li>
+      <li>Una entrada no puede tener dos salidas, pero dos entradas distintas sí pueden dar la misma.</li>
+      <li>Ejemplo 8: f(x) = (x − 3)² en {2, 3, 4, 5} da f(2)=1, f(3)=0, f(4)=1, f(5)=4. Es la regla o bien la lista de valores.</li>
+    </ul>
+    <p>Comparación con programación: una función es como un <code>def</code> con <code>return</code>. Con <code>def suma(x): return 2 + x</code>, <code>suma(2)</code> es 4. La función matemática es más estricta: la misma entrada da <b>siempre</b> la misma salida y solo importa lo que devuelve.</p>
+    <h4>Imagen, inyectiva y biyectiva</h4>
+    <ul>
+      <li><b>Imagen</b> de A ⊆ X: f(A) = {y : existe x ∈ A con f(x) = y}. La imagen de todo el dominio, f(X), es el <b>recorrido</b>: las salidas que realmente se alcanzan.</li>
+      <li><b>Inyectiva:</b> ninguna salida se repite (el texto lo define con la inversa f⁻¹, que debe ser función).</li>
+      <li><b>Biyectiva:</b> inyectiva y además f(X) = Y: todo elemento de Y recibe una flecha.</li>
+    </ul>
+    <p>Una misma regla puede ser biyectiva o no según el conjunto final. Con g(x) = 2x + 1 en {0, 1, 2}, la imagen es {1, 3, 5}: con Y = {1, 3, 5} es biyectiva; con Y = ℕ, sigue siendo inyectiva pero no biyectiva (el 0, el 2, el 4… no se alcanzan).</p>
+    <h4>Operaciones internas</h4>
+    <p>Una operación interna p-aria es una función de Xᵖ en X: entran p elementos de X y sale uno de X. La más común es la binaria (p = 2): dominio X × X, imagen en X. La suma en ℕ se escribe:</p>
+    <p class="m">+ : ℕ × ℕ → ℕ &nbsp;&nbsp; (n, m) ↦ n + m</p>
+    <p>"+" es el nombre de la función, ℕ × ℕ el dominio (pares) y ℕ el conjunto final. La × de ℕ × ℕ es el producto cartesiano, no una multiplicación. "↦" se lee "se asigna a". La división no tiene dominio todo X × X (no se divide entre 0). Las operaciones no suelen llevar una letra como f, sino un símbolo (+, ·).</p>
+    <h4>Cerrado</h4>
+    <p>Un subconjunto M ⊆ X es <b>cerrado</b> para una operación si operar elementos de M da siempre un resultado que sigue en M. Método: toma dos elementos cualesquiera de M, opera y mira si el resultado está en M; un solo caso que se salga basta para que no sea cerrado. Ejemplo 10: los impares son cerrados para la multiplicación (impar · impar = impar) pero no para la suma (3 + 5 = 8). "Los pares" son los <b>números</b> pares {0, 2, 4, …}, no un "par" de elementos.</p>`,
+  faq: [
+    { q: "¿Por qué la × de ℕ × ℕ no es la multiplicación?", a: "<p>Es el producto cartesiano de la sección 1.3: ℕ × ℕ es el conjunto de todos los pares (n, m). La función + toma un par y devuelve un número.</p>" },
+    { q: "¿Por qué la resta no es operación interna en ℕ?", a: "<p>Porque 3 − 5 = −2 no es natural. El texto lo dice en la p. 24: no existe un natural que sumado a 5 dé 3.</p>" },
+    { q: "¿Cuál es la diferencia entre relación y función?", a: "<p>Una función es una relación (subconjunto de X × Y) con una condición extra: cada entrada tiene exactamente una salida.</p>" }
+  ],
+  groups: [{
+    title: "Valores, inyectiva, biyectiva y cerrado",
+    intro: "Responde con un número, un conjunto o V/F.",
+    solved: [
+      E("f(x) = x² − 1 con dominio {−2, −1, 0, 1, 2}. ¿Cuál es su imagen?", ["f(−2)=3, f(−1)=0, f(0)=−1, f(1)=0, f(2)=3.", "Los valores distintos: −1, 0, 3."], "{−1, 0, 3}"),
+      E("Para esa f, ¿es inyectiva?", ["f(−2) = f(2) = 3: hay salidas repetidas."], "F"),
+      E("h(x) = x + 3 con dominio {1, 2, 3} y conjunto final Y = {4, 5, 6}. ¿Es biyectiva?", ["Valores 4, 5, 6: distintos, así que inyectiva.", "La imagen {4,5,6} coincide con Y."], "V"),
+      E("La misma h con conjunto final Y = ℕ. ¿Es biyectiva?", ["Sigue siendo inyectiva, pero la imagen {4,5,6} no es ℕ."], "F"),
+      E("M = {0, 3, 6, 9, …} (múltiplos de 3). ¿Es cerrado para la suma?", ["3a + 3b = 3(a + b), que sigue siendo múltiplo de 3."], "V"),
+      E("g(x) = 2x + 1. Calcula g(2).", ["g(2) = 2 · 2 + 1."], "5")
+    ],
+    todo: [
+      T("f(x) = 3x − 2 con dominio {1, 2, 3, 4}. ¿Cuál es su imagen?", "set", "{1,4,7,10}", ["f(1)=1, f(2)=4, f(3)=7, f(4)=10."], "{1, 4, 7, 10}"),
+      T("Para esa f, ¿es inyectiva?", "vf", "V", ["Los cuatro valores 1, 4, 7, 10 son distintos."], "V"),
+      T("La regla 1→a, 1→b, 2→c, ¿es una función?", "vf", "F", ["La entrada 1 tiene dos salidas (a y b)."], "F"),
+      T("M = {0, 1} ⊆ ℕ. ¿Es cerrado para la suma?", "vf", "F", ["1 + 1 = 2 no está en M."], "F"),
+      T("M = {0, 1} ⊆ ℕ. ¿Es cerrado para el producto?", "vf", "V", ["0·0 = 0, 0·1 = 0, 1·1 = 1: todos en M."], "V"),
+      T("¿Es la resta una operación interna en ℕ?", "vf", "F", ["3 − 5 = −2 no es natural."], "F")
+    ]
+  }],
+  py: `
+    <h4>Funciones en Python</h4>
+<pre><code>def f(x):
+    return x**2 - 1
+
+dominio = [-2, -1, 0, 1, 2]
+valores = [f(x) for x in dominio]        # [3, 0, -1, 0, 3]
+imagen = set(valores)                    # {-1, 0, 3}
+es_inyectiva = len(imagen) == len(valores)
+print(es_inyectiva)                      # False: hay salidas repetidas</code></pre>
+    <p>Una función también se puede guardar como un diccionario: cada clave (entrada) tiene un solo valor (salida).</p>
+<pre><code>g = {1: "a", 2: "a", 3: "b"}    # válido: 1→a, 2→a, 3→b
+# {1: "a", 1: "b"} no puede existir: la clave 1 solo guarda un valor</code></pre>
+    <h4>Comprobar si un conjunto es cerrado</h4>
+<pre><code>M = {0, 1}
+print(all(a + b in M for a in M for b in M))   # False: 1 + 1 = 2 no está en M
+print(all(a * b in M for a in M for b in M))   # True</code></pre>
+    <p><code>all(...)</code> es verdadero solo si se cumple para <b>todas</b> las combinaciones; es la prueba por casos que se hace a mano.</p>`
+});
+
+/* ================= 1.5 FAMILIAS ================= */
+TABS.push({
+  id: "familias", num: "1.5", name: "Familias indexadas", pg: "pp. 22–23",
+  src: "<b>Fuente:</b> apartado 1.5, pp. 22–23 (Ejemplo 11). Ejercicios propios. <b>Posible errata:</b> en p. 23 dice «familia h ∈ X»; por el contexto sería h ∈ H (h es un hogar). Pendiente de tu visto bueno.",
+  theory: `
+    <div class="def"><p>Una <b>familia</b> es una función u : I → X cuyo dominio I es un simple conjunto de <b>índices</b> (etiquetas). Se escribe uᵢ en vez de u(i), y (uᵢ)ᵢ∈I para la función completa.</p></div>
+    <ul>
+      <li>Es como un conjunto con sus miembros <b>etiquetados</b>; por eso se llama también <i>conjunto indexado</i>.</li>
+      <li>Admite <b>repetidos</b>: distintos índices pueden dar el mismo valor.</li>
+      <li>Los índices <b>no tienen por qué ser números</b>: cualquier conjunto sirve.</li>
+      <li>Los elementos pueden ser números, subconjuntos o funciones.</li>
+    </ul>
+    <h4>Ejemplo 11: hogares y consumo cultural</h4>
+    <p>I = {libros, entradas, suscripciones} y H = conjunto de hogares. Para cada producto i hay una función uᵢ : H → ℕ que dice cuántas unidades compra cada hogar. Es una <b>familia de funciones</b>. Se puede ver de dos maneras equivalentes: tres funciones uᵢ(h), o una sola función u : I × H → ℕ con u(i, h). Las entradas son pares (producto cartesiano).</p>
+    <h4>Variable muda</h4>
+    <p>Un índice es un nombre temporal sin importancia: llamarlo i o k no cambia la definición. Existe solo dentro de esa expresión.</p>`,
+  faq: [
+    { q: "Una lista de Python, ¿es una familia?", a: "<p>Sí. <code>v = [5, 8, 8]</code> es una familia con índices I = {0, 1, 2}: v₀ = 5, v₁ = 8, v₂ = 8. No es un conjunto, porque tiene repetidos y cada elemento lleva su etiqueta. Un diccionario es una familia cuyos índices son las claves.</p>" },
+    { q: "¿En qué se diferencian conjunto, tupla y familia?", a: "<p>Conjunto: sin orden y sin repetidos. Tupla: con orden y con repetidos. Familia: se accede por la etiqueta (índice) y admite repetidos; una tupla es una familia con índices 1, 2, …, n.</p>" }
+  ],
+  groups: [{
+    title: "Familias e índices",
+    intro: "Responde con un número, una secuencia separada por comas o un conjunto. Python empieza a contar en 0.",
+    solved: [
+      E("u = [7, 3, 7, 9]. ¿Cuánto vale u₂?", ["Los índices son 0, 1, 2, 3.", "u₀ = 7, u₁ = 3, u₂ = 7."], "7"),
+      E("Con esa u, ¿cuál es el conjunto de sus valores?", ["Quita los repetidos: 7, 3, 9."], "{3, 7, 9}"),
+      E("u = {&quot;lunes&quot;: 2, &quot;martes&quot;: 0, &quot;jueves&quot;: 5}. ¿Cuánto suman todos sus valores?", ["2 + 0 + 5."], "7"),
+      E("Con u = [1, 2, 3], ¿qué da [u[i]*2 for i in range(3)]? Responde los valores separados por comas.", ["i recorre 0, 1, 2 y se multiplica cada valor por 2."], "2,4,6"),
+      E("uᵢ = i² para i ∈ {0, 1, 2, 3}. Escribe la familia (valores en orden).", ["0² = 0, 1² = 1, 2² = 4, 3² = 9."], "0,1,4,9"),
+      E("¿Puede una familia tener elementos repetidos?", ["Sí: cada uno lleva una etiqueta distinta aunque valga lo mismo."], "V")
+    ],
+    todo: [
+      T("u = {&quot;a&quot;: 4, &quot;b&quot;: 1, &quot;c&quot;: 4}. ¿Cuánto vale u_c?", "num", "4", ["Se busca la etiqueta c."], "4"),
+      T("Con esa u, ¿cuántos elementos tiene el conjunto {uᵢ : i ∈ I}?", "num", "2", ["Los valores son 4, 1, 4; como conjunto {1, 4}."], "2"),
+      T("uᵢ = (i − 2)² para i ∈ {0, 1, 2, 3, 4}. Escribe la familia (valores en orden).", "seq", "4,1,0,1,4", ["i=0 → 4, i=1 → 1, i=2 → 0, i=3 → 1, i=4 → 4."], "4, 1, 0, 1, 4"),
+      T("v = [5, 8, 8]. ¿Cuánto vale v₁?", "num", "8", ["Índices 0, 1, 2: v₁ = 8."], "8"),
+      T("u(i, h) con u(pan,h1)=2, u(pan,h2)=0, u(leche,h1)=1, u(leche,h2)=3. ¿Cuántas unidades suman en total?", "num", "6", ["2 + 0 + 1 + 3."], "6"),
+      T("¿Es {5, 8, 8} el mismo conjunto que {5, 8}?", "vf", "V", ["En un conjunto los repetidos no cuentan."], "V")
+    ]
+  }],
+  py: `
+    <h4>Una familia es una lista o un diccionario</h4>
+<pre><code>u = [7, 3, 7, 9]           # índices 0, 1, 2, 3
+print(u[2])                # 7   → u_2
+print(set(u))              # {3, 7, 9}: como conjunto se pierden los repetidos
+
+v = {"lunes": 2, "martes": 0, "jueves": 5}   # índices = etiquetas
+print(v["jueves"])         # 5   → v_jueves
+print(sum(v.values()))     # 7</code></pre>
+    <h4>Variable muda</h4>
+<pre><code>u = [1, 2, 3]
+print([u[i] * 2 for i in range(3)])   # [2, 4, 6]
+print([u[k] * 2 for k in range(3)])   # [2, 4, 6]: da igual llamarla i o k</code></pre>
+    <p>La variable del bucle solo existe dentro de esa línea: eso es una variable muda.</p>
+    <h4>Familia de dos índices u(i, h)</h4>
+<pre><code>u = {("pan", "h1"): 2, ("pan", "h2"): 0,
+     ("leche", "h1"): 1, ("leche", "h2"): 3}
+print(u[("leche", "h2")])   # 3
+print(sum(u.values()))      # 6</code></pre>
+    <p>La clave es un par (i, h): el dominio es el producto cartesiano I × H.</p>`
+});
+
+/* ================= 2.1 NATURALES Y ENTEROS ================= */
+TABS.push({
+  id: "enteros", num: "2.1", name: "Naturales y enteros", pg: "pp. 24–26",
+  src: "<b>Fuente:</b> apartados 1.6 y 2.1, pp. 24–26, y <i>Guía complementaria</i>, módulo 1 (ejercicio 1). Los demás, propios.",
+  theory: `
+    <p>El apartado 1.6 avisa de que los conjuntos numéricos son un <b>repaso</b>. Las bases de numeración y el redondeo no se repiten después, pero hacen falta para las prácticas con ordenador.</p>
+    <div class="def">
+      <p><b>ℕ = {0, 1, 2, …}</b> (en este texto el 0 es natural) con suma, producto y el orden 0 &lt; 1 &lt; 2 … La resta y la división no están definidas en todo ℕ × ℕ: no hay natural que sumado a 5 dé 3.</p>
+      <p><b>ℤ = {0, ±1, ±2, …}</b>: ℕ más sus opuestos. Suma, resta y producto siempre dan un entero; la división no. El orden: … &lt; −3 &lt; −2 &lt; −1 &lt; 0 &lt; 1 &lt; …</p>
+    </div>
+    <h4>Infinito y numerable</h4>
+    <p>Un conjunto es <b>infinito</b> si a cada natural se le puede asignar un elemento diferente de A. Es <b>numerable</b> si a cada uno de sus elementos se le puede asignar un natural distinto, es decir, si se pueden <b>enumerar</b>. ℕ y los pares son infinitos numerables; los días de la semana son un conjunto finito.</p>
+    <p>ℤ también es numerable, pero hay que enumerarlo en otro orden: 0, 1, −1, 2, −2, 3, −3, … (figura 3). En general, el lugar n da (n+1)/2 si n es impar y −n/2 si es par (empezando en n = 0).</p>
+    <h4>Nota 1: el cero</h4>
+    <p>Aunque algunos textos no lo cuentan como natural, el cero es esencial en los sistemas posicionales: marca la posición y distingue 35, 305 y 3005.</p>
+    <h4>Qué es un racional (adelanto del apartado 3)</h4>
+    <p>Un racional es un número que se escribe como fracción p/q de dos <b>enteros</b> (q ≠ 0). No es "cualquier decimal": π tiene decimales y no es racional.</p>`,
+  faq: [
+    { q: "¿Es el 0 un número natural?", a: "<p>En este texto sí: ℕ = {0, 1, 2, …} (p. 24). La Nota 1 comenta que en otros textos no.</p>" },
+    { q: "¿Por qué se amplía ℕ a ℤ?", a: "<p>Para que la resta siempre se pueda hacer. Por ejemplo 3 − 5 = −2 no está en ℕ pero sí en ℤ.</p>" }
+  ],
+  groups: [{
+    title: "Operaciones y pertenencia",
+    intro: "Responde con un número, V/F o los lugares de la enumeración.",
+    solved: [
+      E("Calcula E = −5 − 3 · [4 − (−2 + 8 ÷ 2)] + (−3)². (Guía complementaria, ej. 1)", ["Paréntesis interior: 8 ÷ 2 = 4 y −2 + 4 = 2.", "Corchete: 4 − 2 = 2. Potencia: (−3)² = 9.", "E = −5 − 3 · 2 + 9 = −5 − 6 + 9 = −2."], "−2"),
+      E("Calcula 7 − 10 en ℤ.", ["7 − 10 = −3."], "−3"),
+      E("¿Es 6 ÷ 4 un número entero?", ["6 ÷ 4 = 3/2 = 1,5: no es entero."], "F"),
+      E("En la enumeración 0, 1, −1, 2, −2, … (el lugar 0 es el 0), ¿qué entero ocupa el lugar 8?", ["Lugares: 0→0, 1→1, 2→−1, 3→2, 4→−2, 5→3, 6→−3, 7→4, 8→−4."], "−4"),
+      E("Calcula |−7| + |3|.", ["|−7| = 7 y |3| = 3."], "10"),
+      E("¿Es 15/5 un número natural?", ["15/5 = 3."], "V")
+    ],
+    todo: [
+      T("Calcula E = 2 · [3 − (4 − 7)] − (−2)³.", "num", "20", ["4 − 7 = −3; 3 − (−3) = 6; 2·6 = 12.", "(−2)³ = −8; 12 − (−8) = 20."], "20"),
+      T("¿Qué entero ocupa el lugar 9 de la enumeración 0, 1, −1, 2, −2, …?", "num", "5", ["9 es impar: (9+1)/2 = 5."], "5"),
+      T("¿Son los enteros pares cerrados para la resta?", "vf", "V", ["2a − 2b = 2(a − b)."], "V"),
+      T("¿Son los naturales pares cerrados para la resta?", "vf", "F", ["2 − 4 = −2 no es natural."], "F"),
+      T("Calcula (−4) · (−5) − 3 · 2.", "num", "14", ["(−4)(−5) = 20; 3·2 = 6; 20 − 6 = 14."], "14"),
+      T("¿Es 7/2 un número entero?", "vf", "F", ["7/2 = 3,5."], "F")
+    ]
+  }],
+  py: `
+    <h4>Aritmética entera en Python</h4>
+<pre><code>-5 - 3*(4 - (-2 + 8//2)) + (-3)**2    # -2   (// es la división entera)
+7 - 10          # -3: la resta saca de N pero no de Z
+6 / 4           # 1.5: la división saca de Z
+6 // 4, 6 % 4   # (1, 2): cociente y resto (la base de los cambios de base)
+abs(-7)         # 7</code></pre>
+    <p><code>//</code> es el cociente entero y <code>%</code> el resto: son los mismos "cociente y resto" que se usan en las divisiones sucesivas del apartado de bases.</p>
+    <h4>Enumerar ℤ</h4>
+<pre><code>def entero(n):
+    return (n + 1) // 2 if n % 2 else -(n // 2)
+
+print([entero(n) for n in range(9)])   # [0, 1, -1, 2, -2, 3, -3, 4, -4]</code></pre>
+    <p>Los enteros son numerables porque esa función asigna un entero a cada natural n.</p>
+    <p>En Python, los enteros (<code>int</code>) tienen precisión arbitraria: pueden crecer tanto como permita la memoria.</p>`
+});
+
+/* ================= 2.2-2.3 BASES ================= */
+TABS.push({
+  id: "bases", num: "2.2–2.3", name: "Bases de numeración", pg: "pp. 26–30",
+  src: "<b>Fuente:</b> apartados 2.2 y 2.3, pp. 26–30 (Ejemplos 12 a 16) y <i>Guía complementaria</i>, módulo 1 (ejercicios 2 a 5). Los demás ejercicios, propios.",
+  theory: `
+    <h4>Número y representación</h4>
+    <p>El <b>número</b> es abstracto; su <b>representación</b> es cómo se escribe. 19 y XIX son el mismo número. El sistema romano solo es parcialmente posicional. En un sistema <b>posicional</b> con base b hay b símbolos (las cifras 0, 1, …, b−1) y el valor de cada cifra depende de su posición. Los negativos solo llevan un signo delante (−13 = −1101₂).</p>
+    <h4>El valor posicional, con el sistema que ya usas</h4>
+    <p>En 3482 el 3 está en los miles, el 4 en las centenas, el 8 en las decenas y el 2 en las unidades:</p>
+    <p class="m">3482 = 3·10³ + 4·10² + 8·10¹ + 2·10⁰</p>
+    <p>Eso es "base 10": cada posición vale 10 veces más que la de su derecha, y las cifras posibles son diez (0–9). Un 0 intermedio también cuenta: 5207 = 5·10³ + 2·10² + <b>0·10¹</b> + 7·10⁰.</p>
+    <div class="def">
+      <p><b>Fórmula (1)</b> (corregida, ver nota). Un número con cifras aₖ…a₁a₀ en base b (aₖ ≠ 0) vale</p>
+      <p class="m">n = aₖ·bᵏ + … + a₂·b² + a₁·b + a₀</p>
+      <p>a₀ es la cifra de más a la derecha (unidades), aₖ la de más a la izquierda, y el número tiene k + 1 cifras. Los subíndices cuentan posiciones empezando en 0. bⁱ es el <b>peso</b> de la posición i.</p>
+    </div>
+    <h4>Por qué la posición 1 pesa b</h4>
+    <p>Cuentas con las cifras que hay; cuando se acaban, pasas al siguiente "grupo". En decimal: …, 8, 9 y luego <b>10</b> (un grupo de diez y cero unidades). En hexadecimal: …, 9, A, B, C, D, E, F y luego <b>10₁₆</b> (un grupo de dieciséis y cero unidades). Por eso 10₁₆ = 16 y la posición de la izquierda vale 16.</p>
+    <h4>Las bases más usadas</h4>
+    <div class="tblwrap"><table>
+      <tr><th>Base</th><th>Cifras</th><th>Pesos (de derecha a izquierda)</th><th>Uso</th></tr>
+      <tr><td>2 binario</td><td class="m">0, 1</td><td class="m">1, 2, 4, 8, 16, 32…</td><td>el hardware</td></tr>
+      <tr><td>8 octal</td><td class="m">0–7</td><td class="m">1, 8, 64, 512…</td><td>1 cifra = 3 bits</td></tr>
+      <tr><td>10 decimal</td><td class="m">0–9</td><td class="m">1, 10, 100…</td><td>vida diaria</td></tr>
+      <tr><td>16 hexadecimal</td><td class="m">0–9, A–F</td><td class="m">1, 16, 256, 4096…</td><td>1 cifra = 4 bits; 2 cifras = 1 byte</td></tr>
+    </table></div>
+    <p>En hexadecimal A = 10, B = 11, C = 12, D = 13, E = 14, F = 15. Un byte son 8 bits y toma 2⁸ = 256 valores; una cifra hexadecimal toma 16 = 2⁴ valores, es decir, 4 bits. Por eso el byte 11111111₂ se escribe FF₁₆ (p. 27).</p>
+    <p>El subíndice indica la base y solo se pone cuando conviven números de distintos sistemas (p. 29).</p>
+    <h4>De base b a decimal</h4>
+    <p>Multiplica cada cifra por su peso y suma. Haz siempre una tabla de tres filas: cifra, peso, cifra × peso. Ejemplo con 3B₁₆ (B = 11): 3·16 + 11·1 = 48 + 11 = 59.</p>
+    <h4>De decimal a base b: divisiones sucesivas</h4>
+    <p>El último dígito de un número en base b es el <b>resto</b> de dividirlo entre b. Procedimiento:</p>
+    <ol>
+      <li>Divide el número entre b con <b>división entera</b> (sin decimales: cociente y resto). Por ejemplo 1 ÷ 2 da cociente 0 y resto 1.</li>
+      <li>Anota el resto y repite con el cociente, <b>hasta que el cociente sea 0</b> (no hasta que llegue a 1).</li>
+      <li>Lee los restos <b>de abajo hacia arriba</b>: el primer resto es la cifra de las unidades y va a la derecha.</li>
+      <li>Comprueba pasando el resultado de vuelta a decimal.</li>
+    </ol>
+    <p>Ejemplo 14 del texto, 45 a base 4: 45 = 4·11 + 1; 11 = 4·2 + 3; 2 = 4·0 + 2. Restos 1, 3, 2; al revés: 231₄ (comprobación: 2·16 + 3·4 + 1 = 45).</p>
+    <p>En binario hay un atajo equivalente: descomponer en pesos y poner 1 en los "encendidos". 37 = 32 + 4 + 1 → 100101₂. En otras bases hay que ver cuántas veces cabe cada peso, y ahí la división es el método que siempre funciona.</p>
+    <h4>Atajo binario ↔ hexadecimal y octal</h4>
+    <p>Agrupa los bits <b>de 4 en 4</b> (hexadecimal) o <b>de 3 en 3</b> (octal) desde la derecha, rellenando con ceros a la izquierda. Convierte cada grupo por separado y escribe las cifras seguidas (no se suman ni se multiplican). Pesos de un grupo de 4 bits: 8, 4, 2, 1; de 3 bits: 4, 2, 1. Ejemplo: 10111010₂ → 1011|1010 → B|A = BA₁₆; y en octal 010|111|010 → 272₈.</p>
+    <p>Ejemplo 13 del texto: 11101₂ = 1002₃ sin pasar por decimal, sumando las potencias de 2 escritas en base 3.</p>
+    <div class="note"><strong>Dos erratas en p. 28</strong> (comprobadas en el PDF): la fórmula (1) repite «a₂b» y debería terminar en <i>… + a₂b² + a₁b + a₀</i>; y en el Ejemplo 12, «3·16²» debería ser «3·16» (el resultado 3898 sí es correcto). Pendiente de tu visto bueno.</div>`,
+  faq: [
+    { q: "¿Qué significa aₖ, a₁, a₀? ¿Y qué es k?", a: "<p>Son las cifras del número, numeradas desde la derecha a partir de 0. En 3482: a₀ = 2, a₁ = 8, a₂ = 4, a₃ = 3, y k = 3 (la posición de la cifra de más a la izquierda). Con 4 cifras, el exponente mayor es 3.</p>" },
+    { q: "¿Por qué leer los restos al revés?", a: "<p>El primer resto que sale es la cifra de las unidades, que se escribe a la derecha. El último es la de más a la izquierda. Si los lees en el orden en que salen, el número queda dado la vuelta (101001 en lugar de 100101 para el 37).</p>" },
+    { q: "¿Qué significan las letras A–F?", a: "<p>Son las cifras 10 a 15 en hexadecimal. Se usan letras porque \"10\" ocuparía dos posiciones y se confundiría con un 1 seguido de un 0.</p>" },
+    { q: "En binario ↔ octal, ¿hay que multiplicar por 8?", a: "<p>No. Cada grupo de 3 bits se convierte por separado en una cifra octal y se escriben seguidas. Solo se multiplica por potencias de 8 cuando pasas de octal a decimal.</p>" },
+    { q: "Mi 1 ÷ 2 da 0,5. ¿Qué hago?", a: "<p>En las divisiones sucesivas se usa la división entera: ¿cuántas veces <i>enteras</i> cabe 2 en 1? Cero, y sobra 1. Cociente 0, resto 1. Con 45 ÷ 16: cociente 2 (no 2,81) y resto 45 − 2·16 = 13.</p>" }
+  ],
+  groups: [
+    {
+      title: "A · Valor posicional",
+      intro: "Peso de cada posición y número de cifras.",
+      solved: [
+        E("¿Qué cifra está en las centenas de 5207?", ["Posiciones: unidades 7, decenas 0, centenas 2, millares 5."], "2"),
+        E("¿Cuál es el peso de la posición 3 en base 5?", ["Peso de la posición i = bⁱ.", "5³ = 125."], "125"),
+        E("¿Cuántas cifras tiene 100 en base 10?", ["100 = 1·10² + 0·10 + 0: el exponente mayor es 2, así que tiene k + 1 = 3 cifras."], "3"),
+        E("¿Qué número es 3·10² + 0·10¹ + 4·10⁰?", ["300 + 0 + 4."], "304")
+      ],
+      todo: [
+        T("¿Cuál es el peso de la posición 4 en base 3?", "num", "81", ["3⁴ = 81."], "81"),
+        T("¿Qué cifra está en las decenas de 3482?", "num", "8", ["Unidades 2, decenas 8."], "8"),
+        T("¿Qué número es 7·10³ + 0·10² + 0·10¹ + 5·10⁰?", "num", "7005", ["7000 + 5."], "7005"),
+        T("¿Cuántas cifras tiene 4096 en base 10?", "num", "4", ["4096 está entre 10³ y 10⁴."], "4")
+      ]
+    },
+    {
+      title: "B · Binario (base 2)",
+      intro: "Pesos 1, 2, 4, 8, 16, 32, 64, 128… Escribe el resultado sin subíndice.",
+      solved: [
+        E("Pasa 1011₂ a decimal.", ["Pesos 8, 4, 2, 1: 1·8 + 0·4 + 1·2 + 1·1 = 11."], "11"),
+        E("Pasa 13 a binario.", ["13 ÷ 2 = 6 r1; 6 ÷ 2 = 3 r0; 3 ÷ 2 = 1 r1; 1 ÷ 2 = 0 r1.", "Restos al revés: 1101."], "1101"),
+        E("Pasa 37 a binario.", ["37 = 32 + 4 + 1 (pesos 32, 16, 8, 4, 2, 1 → encendidos 32, 4 y 1).", "Cifras: 1 0 0 1 0 1."], "100101"),
+        E("Pasa 157 a binario. (Guía complementaria, ej. 2)", ["157 ÷ 2 = 78 r1; 78 ÷ 2 = 39 r0; 39 ÷ 2 = 19 r1; 19 ÷ 2 = 9 r1.", "9 ÷ 2 = 4 r1; 4 ÷ 2 = 2 r0; 2 ÷ 2 = 1 r0; 1 ÷ 2 = 0 r1.", "Restos al revés: 10011101."], "10011101")
+      ],
+      todo: [
+        T("Pasa 10110₂ a decimal.", "num", "22", ["16 + 0 + 4 + 2 + 0 = 22."], "22"),
+        T("Pasa 25 a binario.", "text", ["11001"], ["25 = 16 + 8 + 1.", "Pesos 16, 8, 4, 2, 1: 1 1 0 0 1."], "11001"),
+        T("Pasa 100 a binario.", "text", ["1100100"], ["100 = 64 + 32 + 4.", "Pesos 64, 32, 16, 8, 4, 2, 1: 1 1 0 0 1 0 0."], "1100100"),
+        T("Calcula 101₂ + 11₂ en binario.", "text", ["1000"], ["101 = 5 y 11 = 3: la suma es 8.", "8 en binario es 1000. En columnas: 1+1 = 10 (llevo 1)…"], "1000")
+      ]
+    },
+    {
+      title: "C · Octal (base 8)",
+      intro: "Pesos 1, 8, 64, 512… Cifras 0–7. Para binario → octal agrupa de 3 en 3.",
+      solved: [
+        E("Pasa 53₈ a decimal.", ["5·8 + 3·1 = 40 + 3."], "43"),
+        E("Pasa 101110₂ a octal.", ["Grupos de 3 desde la derecha: 101 | 110.", "101 = 4 + 0 + 1 = 5; 110 = 4 + 2 + 0 = 6.", "Escribe seguidas: 56."], "56"),
+        E("Pasa 157 a octal. (Guía complementaria, ej. 2)", ["157 ÷ 8 = 19 r5; 19 ÷ 8 = 2 r3; 2 ÷ 8 = 0 r2.", "Restos al revés: 235."], "235")
+      ],
+      todo: [
+        T("Pasa 74₈ a decimal.", "num", "60", ["7·8 + 4 = 56 + 4."], "60"),
+        T("Pasa 100 a octal.", "text", ["144"], ["100 ÷ 8 = 12 r4; 12 ÷ 8 = 1 r4; 1 ÷ 8 = 0 r1.", "Restos al revés: 144."], "144"),
+        T("Pasa 110101₂ a octal.", "text", ["65"], ["Grupos: 110 | 101.", "110 = 6; 101 = 5."], "65")
+      ]
+    },
+    {
+      title: "D · Hexadecimal (base 16)",
+      intro: "Pesos 1, 16, 256, 4096… Cifras 0–9 y A–F. Para binario → hexadecimal agrupa de 4 en 4. Escribe las letras en mayúscula o minúscula.",
+      solved: [
+        E("Pasa 3B₁₆ a decimal.", ["B vale 11. Pesos 16 y 1.", "3·16 + 11·1 = 48 + 11."], "59"),
+        E("Pasa 2B5₁₆ a decimal. (Guía complementaria, ej. 3)", ["2·256 + 11·16 + 5·1 = 512 + 176 + 5."], "693"),
+        E("Pasa 748 a hexadecimal. (Guía complementaria, ej. 3)", ["748 ÷ 16 = 46 r12 (C); 46 ÷ 16 = 2 r14 (E); 2 ÷ 16 = 0 r2.", "Restos al revés: 2 E C."], "2EC"),
+        E("Pasa 11010111101₂ a hexadecimal. (Guía complementaria, ej. 4)", ["Grupos de 4 desde la derecha: 0110 | 1011 | 1101.", "0110 = 6; 1011 = 11 = B; 1101 = 13 = D."], "6BD")
+      ],
+      todo: [
+        T("Pasa 1F4₁₆ a decimal.", "num", "500", ["1·256 + 15·16 + 4·1 = 256 + 240 + 4."], "500"),
+        T("Pasa 2C₁₆ a decimal.", "num", "44", ["2·16 + 12 = 44."], "44"),
+        T("Pasa 100 a hexadecimal.", "text", ["64"], ["100 ÷ 16 = 6 r4; 6 ÷ 16 = 0 r6.", "Restos al revés: 6 4."], "64"),
+        T("Pasa 10101111₂ a hexadecimal.", "text", ["af"], ["Grupos: 1010 | 1111.", "1010 = 10 = A; 1111 = 15 = F."], "AF")
+      ]
+    },
+    {
+      title: "E · Otras bases (3, 4, 5…)",
+      intro: "El método es siempre el mismo: pesos bⁱ, cifras 0 hasta b−1.",
+      solved: [
+        E("Pasa 30 a base 3.", ["30 ÷ 3 = 10 r0; 10 ÷ 3 = 3 r1; 3 ÷ 3 = 1 r0; 1 ÷ 3 = 0 r1.", "Restos al revés: 1010. Comprobación: 27 + 3 = 30."], "1010"),
+        E("Pasa 45 a base 4. (Ejemplo 14 del texto)", ["45 = 4·11 + 1; 11 = 4·2 + 3; 2 = 4·0 + 2.", "Restos al revés: 231."], "231"),
+        E("Pasa 1002₃ a decimal. (Ejemplo 13 del texto)", ["Pesos 27, 9, 3, 1: 1·27 + 0·9 + 0·3 + 2·1 = 29."], "29")
+      ],
+      todo: [
+        T("Pasa 123₄ a decimal.", "num", "27", ["1·16 + 2·4 + 3·1 = 16 + 8 + 3."], "27"),
+        T("Pasa 20 a base 3.", "text", ["202"], ["20 ÷ 3 = 6 r2; 6 ÷ 3 = 2 r0; 2 ÷ 3 = 0 r2.", "Restos al revés: 202."], "202"),
+        T("Pasa 43 a base 5.", "text", ["133"], ["43 ÷ 5 = 8 r3; 8 ÷ 5 = 1 r3; 1 ÷ 5 = 0 r1.", "Restos al revés: 133."], "133")
+      ]
+    }
+  ],
+  py: `
+    <h4>Conversión automática</h4>
+<pre><code>bin(13)            # '0b1101'     (el prefijo 0b indica binario)
+oct(100)           # '0o144'
+hex(255)           # '0xff'
+f"{37:b}"          # '100101'     (sin prefijo)
+f"{200:X}"         # 'C8'         (hexadecimal en mayúsculas)
+
+int("1101", 2)     # 13   (texto en base 2 → entero decimal)
+int("144", 8)      # 100
+int("FF", 16)      # 255</code></pre>
+    <p>Python guarda el número una sola vez; <code>bin</code>, <code>oct</code> y <code>hex</code> solo cambian cómo se escribe (número frente a representación).</p>
+    <h4>El algoritmo de las divisiones sucesivas, a mano</h4>
+<pre><code>def a_base(n, b):
+    restos = []
+    while n &gt; 0:
+        restos.append(n % b)   # el resto es una cifra
+        n = n // b             # el cociente sigue
+    return restos[::-1]        # leer de abajo hacia arriba
+
+a_base(30, 3)    # [1, 0, 1, 0]  → 1010 en base 3
+a_base(45, 4)    # [2, 3, 1]     → 231 en base 4</code></pre>
+    <p>El <code>while</code> para cuando el cociente llega a 0 y <code>[::-1]</code> da la vuelta a la lista: son los pasos 2 y 3 del método.</p>
+    <h4>De base b a decimal con la fórmula (1)</h4>
+<pre><code>cifras = [2, 8, 4, 3]       # a0, a1, a2, a3 (de derecha a izquierda)
+b = 10
+n = sum(a * b**i for i, a in enumerate(cifras))
+print(n)                    # 3482</code></pre>
+    <p><code>i</code> es la posición (el subíndice) y <code>a</code> la cifra. Es la fórmula escrita en una línea.</p>`
+});
+
+/* ================= 3 RACIONALES ================= */
+TABS.push({
+  id: "racionales", num: "3", name: "Racionales", pg: "pp. 30–36",
+  src: "<b>Fuente:</b> apartado 3, pp. 30–36 (Ejemplos 17 a 31) y <i>Guía complementaria</i>, módulo 2 (ejercicios 7 a 9). Los demás ejercicios, propios. Las reglas básicas de fracciones del primer bloque son matemática general (el texto las da por sabidas, p. 30).",
+  theory: `
+    <div class="def"><p><b>ℚ = { p/q : p, q ∈ ℤ, q ≠ 0 }</b> (p. 30). Se puede sumar, restar, multiplicar y dividir (salvo entre 0) y el resultado sigue en ℚ. Esa estructura es el modelo de <b>cuerpo</b>. Un racional no es "cualquier decimal": π tiene decimales y no es racional.</p></div>
+    <h4>Repaso de fracciones (matemática general)</h4>
+    <ul>
+      <li><b>Multiplicar:</b> arriba por arriba y abajo por abajo; luego simplifica. 2/5 · 3/7 = 6/35.</li>
+      <li><b>Sumar con el mismo denominador:</b> se suman los de arriba. 2/9 + 4/9 = 6/9 = 2/3.</li>
+      <li><b>Sumar con distinto denominador:</b> busca un denominador común y convierte (multiplicando arriba y abajo por lo mismo). 1/2 + 1/3 = 3/6 + 2/6 = 5/6. Nunca se suman los denominadores.</li>
+      <li><b>Dividir:</b> da la vuelta a la segunda y multiplica. 1/2 ÷ 3/5 = 1/2 · 5/3 = 5/6.</li>
+    </ul>
+    <h4>Valor absoluto</h4>
+    <p>|x| = máx{x, −x}. Por ejemplo |4| = 4 y |−3| = 3. Propiedades: |x + y| ≤ |x| + |y| y |xy| = |x||y|.</p>
+    <h4>Desarrollo decimal (p. 32)</h4>
+    <p>La división escolar es repetir una división entera: en cada paso se multiplica el resto por 10 y se divide entre el denominador. Como solo hay q restos posibles (0, …, q−1), antes o después un resto se repite y el desarrollo se vuelve <b>periódico</b> a partir de ahí: es <b>eventualmente periódico</b>.</p>
+    <p>Ejemplo 20: 3/8 = 0,375 (3·10 = 30 = 3·8 + 6; 6·10 = 60 = 7·8 + 4; 4·10 = 40 = 5·8 + 0). Ejemplo 21: 2297/990 = 2,32020… = 2,3<b>20</b>; se repite el resto 200.</p>
+    <ul>
+      <li>Es <b>exacto</b> en base b si el periodo es 0 (3/8 en base 10; pero 1/3 = 0,1₃ es exacto en base 3 y no en base 10).</li>
+      <li>Periódico <b>puro</b> si el periodo empieza tras la coma (1/3 = 0,3̄); <b>mixto</b> si hay anteperiodo (7/6 = 1,16̄).</li>
+      <li>Todo racional tiene desarrollo eventualmente periódico y recíprocamente (caracterización I.2, p. 34).</li>
+      <li>El periodo 9 nunca sale de la división: 0,9̄ = 1.</li>
+    </ul>
+    <h4>Fracción generatriz (Ejemplo 22)</h4>
+    <p>Multiplica por potencias de la base para que la parte decimal coincida y resta. Con r = 2,3202020…: 10³r = 2320,2020… y 10r = 23,2020…; al restar, 990r = 2320 − 23 = 2297, luego r = 2297/990.</p>
+    <h4>Cifras significativas y notación científica (pp. 34–35)</h4>
+    <p>Un racional exacto r = p·bᵠ tiene <b>n cifras significativas</b> si bⁿ⁻¹ ≤ |p| &lt; bⁿ con p no divisible entre b. Ejemplos: 5,67 = 567·10⁻² tiene 3; 40 000 = 4·10⁴ tiene 1. En <b>notación científica</b> se ajusta el exponente hasta tener una sola cifra entera: 23,567 = 2,3567·10¹ y 0,0497 = 4,97·10⁻². Se escribe también 4,97E−2.</p>
+    <p>5,200, 5,20 y 5,2 son tres representaciones del mismo número, no números distintos.</p>
+    <p>El estándar IEEE 754 usa esta notación en base 2: 32 bits en precisión simple (1 de signo, 8 de exponente, 23 de fracción) y 64 en doble (1, 11, 52).</p>`,
+  faq: [
+    { q: "¿Un racional es cualquier número con decimales?", a: "<p>No. Es un número que se puede escribir como fracción de dos enteros. π y √2 tienen infinitos decimales sin periodo y no son racionales.</p>" },
+    { q: "¿Por qué se suman con denominador común y no los denominadores?", a: "<p>1/2 + 1/2 = 1, pero sumando arriba y abajo daría 2/4 = 1/2. Hay que convertir ambos al mismo denominador y sumar solo los de arriba.</p>" }
+  ],
+  groups: [{
+    title: "Fracciones, generatrices y notación científica",
+    intro: "Fracciones: escríbelas como a/b ya simplificadas (por ejemplo 5/16). Decimales: usa punto o coma.",
+    solved: [
+      E("Halla la fracción irreducible de 3,454545… (Guía complementaria, ej. 7)", ["x = 3,4545…; el periodo tiene 2 cifras, así que 100x = 345,4545…", "100x − x = 342, o sea 99x = 342; x = 342/99.", "Simplifica entre 9: 38/11."], "38/11"),
+      E("Halla la fracción irreducible de 2,1363636… (Guía complementaria, ej. 8)", ["10x = 21,3636…; 1000x = 2136,3636…", "990x = 2136 − 21 = 2115; x = 2115/990.", "Entre 5: 423/198; entre 9: 47/22."], "47/22"),
+      E("Calcula (2/3 − 1/4) ÷ (5/6 + 1/2). (Guía complementaria, ej. 9)", ["2/3 − 1/4 = 8/12 − 3/12 = 5/12.", "5/6 + 1/2 = 5/6 + 3/6 = 8/6 = 4/3.", "(5/12) ÷ (4/3) = (5·3)/(12·4) = 15/48 = 5/16."], "5/16"),
+      E("Halla la fracción de 0,333…", ["x = 0,333…; 10x = 3,333…", "10x − x = 3, o sea 9x = 3; x = 1/3."], "1/3"),
+      E("Escribe 3/8 en decimal.", ["3 ÷ 8: 30 = 3·8 + 6, 60 = 7·8 + 4, 40 = 5·8 + 0.", "Cifras 3, 7, 5."], "0,375"),
+      E("Calcula |−7/2|.", ["El valor absoluto quita el signo."], "7/2")
+    ],
+    todo: [
+      T("Halla la fracción irreducible de 0,777…", "num", "7/9", ["x = 0,777…; 10x − x = 7; 9x = 7."], "7/9"),
+      T("¿Cuál es la cifra del periodo en el desarrollo decimal de 1/6 = 0,1666…?", "num", "6", ["1/6 = 0,1666…: el 1 es el anteperiodo y el periodo es 6."], "6"),
+      T("Escribe 1/4 en decimal.", "num", "0.25", ["10 = 2·4 + 2; 20 = 5·4 + 0. Cifras 2 y 5."], "0,25"),
+      T("Escribe 5280 en notación científica.", "sci", "5.28e3", ["Una sola cifra entera: 5,28 · 10³."], "5,28 · 10³"),
+      T("¿Cuántas cifras significativas tiene 5280 en base 10?", "num", "3", ["5280 = 528 · 10, con p = 528 no divisible entre 10.", "10² ≤ 528 &lt; 10³, así que tiene 3."], "3"),
+      T("Calcula |−3/4|.", "num", "3/4", ["Quita el signo."], "3/4")
+    ]
+  }],
+  py: `
+    <h4>Fracciones exactas con <code>Fraction</code></h4>
+<pre><code>from fractions import Fraction
+print(Fraction(2, 3) - Fraction(1, 4))     # 5/12
+print(Fraction(3, 8) + Fraction(1, 8))     # 1/2   (ya simplificada)
+print(Fraction("0.75"))                    # 3/4
+print(Fraction(2, 3) / Fraction(5, 6))     # 4/5</code></pre>
+    <p><code>Fraction</code> guarda numerador y denominador enteros y simplifica solo: no hay errores de redondeo.</p>
+    <h4>Desarrollo decimal por divisiones sucesivas</h4>
+<pre><code>def decimales(p, q, n=8):
+    cifras = []
+    r = p % q               # resto de la parte entera
+    for _ in range(n):
+        r *= 10             # "bajar un cero"
+        cifras.append(r // q)
+        r = r % q
+    return cifras
+
+print(decimales(3, 8))   # [3, 7, 5, 0, 0, 0, 0, 0]  → 0,375 (periodo 0)
+print(decimales(1, 6))   # [1, 6, 6, 6, 6, 6, 6, 6]  → 0,1666…</code></pre>
+    <p>Es exactamente lo que hace la división escolar del Ejemplo 20.</p>
+    <h4>Notación científica</h4>
+<pre><code>print(f"{5280:.2e}")      # 5.28e+03
+print(f"{0.00731:.2e}")   # 7.31e-03</code></pre>`
+});
+
+/* ================= 4 REALES ================= */
+TABS.push({
+  id: "reales", num: "4", name: "Reales y redondeo", pg: "pp. 36–41",
+  src: "<b>Fuente:</b> apartado 4, pp. 36–41 (Ejemplos 29 a 33) y <i>Guía complementaria</i>, módulo 2 (ejercicios 6 y 10). Ejercicios propios.",
+  theory: `
+    <div class="def"><p><b>ℝ</b> es el menor cuerpo ordenado <b>completo</b> que extiende a ℚ (p. 36). ℚ no es completo: el conjunto {r ∈ ℚ : r² &lt; 2} no tiene cota superior mínima en ℚ (Ejemplo 19).</p></div>
+    <ul>
+      <li>Se pueden identificar los reales con todos los desarrollos posibles, con parte decimal infinita cualquiera.</li>
+      <li><b>Irracionales:</b> su desarrollo no es eventualmente periódico. Ejemplos: √2, π, e. ℝ = ℚ ∪ 𝕀.</li>
+      <li>A diferencia de ℚ, ℝ <b>no es numerable</b> (argumento diagonal, p. 37).</li>
+      <li>Entre dos reales distintos hay infinitos racionales exactos (densidad).</li>
+    </ul>
+    <h4>Redondeo (p. 38)</h4>
+    <p>Se sustituye el número por el representable más próximo. Si hay dos candidatos a igual distancia, se toma el de <b>última cifra par</b> (redondeo al par más cercano, el de IEEE 754). Evita acumular errores siempre en el mismo sentido.</p>
+    <p>Ejemplo 29, a 2 c.s.: 1,25 → 1,2 (hacia abajo) pero 1,35 → 1,4 (hacia arriba). Ejemplo 30, a 3 c.s.: 3,14159265 → 3,14; 0,00012349 → 0,000123; 0,009865 → 0,00986; 0,009835 → 0,00984.</p>
+    <p>Cómo hacerlo: cuenta las cifras significativas desde la primera no nula, mira la cifra siguiente y decide. Si lo que queda es exactamente la mitad, aplica el criterio del par.</p>
+    <h4>La aritmética con redondeo pierde propiedades</h4>
+    <p>Con dos c.s., (1 + 0,04) + 0,04 ≈ 1 pero 1 + (0,04 + 0,04) ≈ 1,1: la suma deja de ser asociativa (Ejemplo 31). Por eso en Python 0,1 + 0,2 da 0,30000000000000004: 0,1 y 0,2 son periódicos en base 2 (Ejemplo 32). Para dinero se usa el módulo <code>decimal</code> (Ejemplo 33).</p>`,
+  faq: [
+    { q: "¿Por qué 0,1 + 0,2 ≠ 0,3 en Python?", a: "<p>Porque 0,1 y 0,2 no tienen desarrollo finito en base 2 (son periódicos) y el ordenador los redondea a 53 bits. Al sumarlos queda un valor ligeramente mayor que 0,3 (Ejemplo 32). No es un error de Python.</p>" }
+  ],
+  groups: [{
+    title: "Clasificación, orden y redondeo",
+    intro: "Redondeo a 3 cifras significativas en base 10, con el criterio del par en los empates. Usa punto o coma decimal.",
+    solved: [
+      E("¿Es √5 un número racional? (Guía complementaria, ej. 6)", ["√5 = 2,236… sin periodo: es irracional."], "F"),
+      E("¿Pertenece π a ℝ?", ["π es irracional, y los irracionales están en ℝ."], "V"),
+      E("¿Es 0,888… un número racional?", ["Es periódico puro y vale 8/9."], "V"),
+      E("Del conjunto {−2,75; −8/3; 0}, ¿cuál es el menor? (Guía complementaria, ej. 10)", ["−8/3 = −2,666…", "Entre −2,75 y −2,666…, el más negativo es −2,75."], "−2,75"),
+      E("Redondea 2,71828 a 3 c.s.", ["Tres cifras: 2,71; la siguiente es 8, que sube: 2,72."], "2,72"),
+      E("Redondea 4,675 a 3 c.s.", ["4,675 está exactamente entre 4,67 y 4,68.", "Se toma el de última cifra par: 4,68."], "4,68")
+    ],
+    todo: [
+      T("Redondea 0,0123456 a 3 c.s.", "num", "0.0123", ["Las cifras significativas empiezan en el 1: 0,0123|456.", "456… es menor que 500…, así que no sube."], "0,0123"),
+      T("Redondea 8,465 a 3 c.s.", "num", "8.46", ["Empate entre 8,46 y 8,47; se toma el par: 8,46."], "8,46"),
+      T("Redondea 6,0225 a 3 c.s.", "num", "6.02", ["6,02|25 está más cerca de 6,02."], "6,02"),
+      T("Redondea 0,12350 a 3 c.s.", "num", "0.124", ["Empate entre 0,123 y 0,124; se toma el par: 0,124."], "0,124"),
+      T("¿Es ℝ numerable?", "vf", "F", ["ℝ no es numerable (argumento diagonal, p. 37)."], "F"),
+      T("¿Cuál es el mayor de {−√4, −1,5, 1/3, 0,34, π/3}?", "text", ["pi/3", "π/3", "1.047", "1.0472", "1,047", "1,0472"], ["−√4 = −2; 1/3 = 0,333…; 0,34; π/3 ≈ 1,047.", "El mayor es π/3."], "π/3")
+    ]
+  }],
+  py: `
+    <h4>Reales en el ordenador (<code>float</code>)</h4>
+<pre><code>0.1 + 0.2                  # 0.30000000000000004
+0.1 + 0.2 == 0.3           # False
+import math
+math.isclose(0.1 + 0.2, 0.3)   # True: así se comparan flotantes
+math.sqrt(2)               # 1.4142135623730951 (solo una aproximación)</code></pre>
+    <h4>Redondeo al par más cercano</h4>
+<pre><code>round(2.5), round(3.5)     # (2, 4): Python redondea los empates al par</code></pre>
+    <p>Con <code>Decimal</code> el redondeo es exacto y lo eliges tú:</p>
+<pre><code>from decimal import Decimal, ROUND_HALF_EVEN
+x = Decimal("4.675")
+print(x.quantize(Decimal("0.01"), rounding=ROUND_HALF_EVEN))   # 4.68
+print(Decimal("0.1") + Decimal("0.2"))                         # 0.3</code></pre>
+    <p><code>quantize</code> deja el número con 2 decimales. Para dinero se fija el número de decimales; en ciencia, las cifras significativas (p. 41).</p>`
+});
+
+/* ================= 5 COMPLEJOS ================= */
+TABS.push({
+  id: "complejos", num: "5", name: "Números complejos", pg: "pp. 41–53",
+  src: "<b>Fuente:</b> apartado 5, pp. 41–53 (Ejemplos 34 a 43) y <i>Guía complementaria</i>, «Números complejos» (ejercicios 3, 6, 8, 9, 11, 15). Los demás, propios.",
+  theory: `
+    <div class="def"><p><b>ℂ = { a + bi : a, b ∈ ℝ }</b>, con i² = −1 (p. 42). Se opera como si i fuera una variable y se sustituye i² por −1. Re(z) = a, Im(z) = b (un número <b>real</b>). ℕ ⊂ ℤ ⊂ ℚ ⊂ ℝ ⊂ ℂ.</p></div>
+    <h4>La unidad imaginaria</h4>
+    <p>i es una solución de x² = −1 (la otra es −i). Por tanto i = "√−1" e <b>i² = −1</b> (no −i, ni 1). En Python se escribe <code>j</code> (Nota 3). ℂ no es un cuerpo ordenado: si lo fuera, −1 = i² &gt; 0, imposible.</p>
+    <h4>Operaciones en forma binómica</h4>
+    <ul>
+      <li><b>Suma:</b> (5 + 7i) + (−1 + 2i) = 4 + 9i.</li>
+      <li><b>Producto:</b> distributiva y i² = −1. (5 + 7i)(−1 + 2i) = −5 + 10i − 7i + 14i² = −19 + 3i.</li>
+      <li><b>División:</b> multiplica numerador y denominador por el conjugado del denominador (así el denominador queda real).</li>
+      <li><b>Potencias de i:</b> se repiten cada 4: i, −1, −i, 1. Para iᵏ, divide k entre 4 y usa el resto (Ejemplo 35).</li>
+    </ul>
+    <h4>Conjugado y módulo</h4>
+    <ul>
+      <li><b>Conjugado:</b> z̄ = a − bi. Propiedades: conj(z + w) = z̄ + w̄ y conj(zw) = z̄ · w̄. Además z · z̄ = a² + b².</li>
+      <li><b>Módulo:</b> |z| = √(a² + b²), con |zw| = |z||w|. En Python: <code>abs(z)</code>.</li>
+    </ul>
+    <h4>Plano complejo y forma trigonométrica (p. 46)</h4>
+    <p>a + bi se identifica con el punto (a, b) de ℝ². Entonces z = r(cos θ + i sen θ), con r = |z|. El argumento θ no es único: Arg(z) son todos los ángulos que difieren en múltiplos de 2π; el criterio del texto es medirlos en [−π, π). Ejemplo 38: z = 1 − √3 i tiene |z| = 2 y argumento principal −π/3.</p>
+    <h4>Exponencial, Euler, Moivre y raíces (pp. 47–50)</h4>
+    <ul>
+      <li><b>Euler:</b> e<sup>iθ</sup> = cos θ + i sen θ, así que z = r e<sup>iθ</sup> y e<sup>iπ</sup> + 1 = 0.</li>
+      <li>Multiplicar complejos de módulo 1 equivale a sumar argumentos (rotaciones). Multiplicar por i gira un cuarto de vuelta.</li>
+      <li><b>Moivre:</b> zⁿ = rⁿ e<sup>inθ</sup>. Ejemplo 40: (1 + i)¹² = −64.</li>
+      <li><b>Raíces n-ésimas</b> de z = re<sup>iθ</sup>: n números de módulo r<sup>1/n</sup> y argumentos θ/n + 2πk/n, con k = 0 … n−1. Forman un polígono regular. Ejemplo 42: las raíces quintas de 32.</li>
+    </ul>
+    <h4>Ecuación de segundo grado y Teorema Fundamental del Álgebra (pp. 51–53)</h4>
+    <p>En x = (−b ± √(b² − 4ac))/(2a) el <b>discriminante</b> b² − 4ac decide: positivo, dos raíces reales; nulo, una doble; <b>negativo</b>, dos raíces complejas conjugadas (el discriminante sigue siendo real; lo que se vuelve imaginario es su raíz). Ejemplo 43: z² − 2z + 10 = 0 da 1 ± 3i.</p>
+    <div class="def"><p><b>Teorema Fundamental del Álgebra:</b> todo polinomio no constante tiene al menos una raíz en ℂ; uno de grado n tiene n raíces contando multiplicidad y se factoriza como P(z) = aₙ(z − z₁)^m₁ ⋯ (z − z_p)^m_p con m₁ + … + m_p = n.</p></div>
+    <div class="note"><strong>Posible errata, p. 48</strong> (comprobada en el PDF): las series de eˣ, cos x y sen x, y la de la fórmula de Euler, empiezan en n = 1 (y k = 1). Deberían empezar en 0; con n = 1, e⁰ valdría 0 en vez de 1. Pendiente de tu visto bueno.</div>`,
+  faq: [
+    { q: "¿Cuánto vale i²?", a: "<p>−1, por definición de i (i = \"√−1\", y elevar al cuadrado una raíz cuadrada devuelve lo de dentro). No es −i ni 1.</p>" },
+    { q: "Si el discriminante es negativo, ¿el discriminante es complejo?", a: "<p>No: el discriminante sigue siendo un número real (negativo). Lo que se vuelve imaginario es su raíz cuadrada, y por eso las soluciones salen complejas.</p>" }
+  ],
+  groups: [{
+    title: "Operaciones, módulo, conjugado y ecuaciones",
+    intro: "Escribe los complejos como a+bi (por ejemplo 5+i, −i, −0.1+1.7i) o con fracciones (−1/10+17/10i). Admite también j.",
+    solved: [
+      E("Calcula i¹³. (Guía complementaria, ej. 3)", ["13 ÷ 4 = 3 resto 1, así que i¹³ = i¹."], "i"),
+      E("Calcula i²².", ["22 ÷ 4 = 5 resto 2, así que i²² = i² = −1."], "−1"),
+      E("Calcula (5 + 2i)/(1 − 3i). (Guía complementaria, ej. 8)", ["Multiplica arriba y abajo por 1 + 3i.", "Numerador: (5+2i)(1+3i) = 5 + 15i + 2i + 6i² = −1 + 17i.", "Denominador: 1² + 3² = 10.", "Resultado: −1/10 + 17/10 i."], "−0,1 + 1,7i"),
+      E("Resuelve x² + 2x + 5 = 0 y da la solución con parte imaginaria positiva. (Guía complementaria, ej. 15)", ["Discriminante: 4 − 20 = −16; √−16 = 4i.", "x = (−2 ± 4i)/2 = −1 ± 2i."], "−1 + 2i"),
+      E("Calcula (2 + 3i)(1 − i).", ["2 − 2i + 3i − 3i² = 2 + i + 3."], "5 + i"),
+      E("Calcula |3 + 4i|. (Ejemplo 37)", ["√(3² + 4²) = √25."], "5")
+    ],
+    todo: [
+      T("Calcula (4 − 3i)(2 + 5i). (Guía complementaria, ej. 6)", "cx", "23+14i", ["8 + 20i − 6i − 15i² = 8 + 14i + 15."], "23 + 14i"),
+      T("Calcula 2/i + (1 + i)/(1 − i). (Guía complementaria, ej. 9)", "cx", "-i", ["2/i = −2i (multiplica por −i/−i).", "(1+i)/(1−i) = (1+i)²/2 = 2i/2 = i.", "−2i + i = −i."], "−i"),
+      T("Calcula |−6 + 8i|. (Guía complementaria, ej. 11)", "num", "10", ["√(36 + 64) = √100."], "10"),
+      T("Calcula i⁴⁰.", "cx", "1", ["40 ÷ 4 = 10 resto 0, así que i⁴⁰ = i⁰ = 1."], "1"),
+      T("Calcula (3 − 2i)².", "cx", "5-12i", ["9 − 12i + 4i² = 9 − 12i − 4."], "5 − 12i"),
+      T("Calcula el conjugado de 7 − 4i.", "cx", "7+4i", ["Se cambia el signo de la parte imaginaria."], "7 + 4i")
+    ]
+  }],
+  py: `
+    <h4>Complejos en Python (con <code>j</code>)</h4>
+<pre><code>z = 5 + 2j
+w = 1 - 3j
+print(z + w)           # (6-1j)
+print(z * w)           # (11-13j)
+print(z / w)           # ≈ (-0.1+1.7j)
+print(z.real, z.imag)  # 5.0 2.0
+print(z.conjugate())   # (5-2j)
+print(abs(3 + 4j))     # 5.0  (el módulo)</code></pre>
+    <p>Python hace la distributiva y sustituye j² = −1 por ti.</p>
+    <h4>Potencias de i con el resto entre 4</h4>
+<pre><code>def potencia_i(n):
+    return {0: 1, 1: 1j, 2: -1, 3: -1j}[n % 4]
+
+potencia_i(13)    # 1j      (13 % 4 = 1)
+potencia_i(22)    # -1      (22 % 4 = 2)
+potencia_i(40)    # 1       (40 % 4 = 0)</code></pre>
+    <h4>Raíces de ecuaciones y forma polar con <code>cmath</code></h4>
+<pre><code>import cmath
+cmath.sqrt(-16)              # 4j
+(-2 + cmath.sqrt(-16)) / 2   # (-1+2j): una solución de x² + 2x + 5 = 0
+cmath.polar(1 + 1j)          # (1.414..., 0.785...)  módulo y argumento en radianes
+cmath.exp(1j * cmath.pi)     # ≈ -1  (identidad de Euler)</code></pre>`
+});
+
+/* ================= VERSIÓN PARA DUMMIES ================= */
+const EASY = {};
+
+EASY.logica = `
+  <h4>Qué es esto de la lógica</h4>
+  <p>En matemáticas una <b>afirmación</b> es una frase que solo puede ser <b>verdadera</b> o <b>falsa</b>. "7 es impar" es verdadera; "7 es par" es falsa. Muchas afirmaciones llevan una <b>variable</b> (una letra que representa un número): "x es par" será verdadera o falsa según el valor de x.</p>
+  <h4>Las frases "si… entonces…"</h4>
+  <p>El texto del libro (p. 15) solo usa dos símbolos de lógica. El principal es la <b>flecha ⇒</b>, que se lee "implica" o "si… entonces…". Si P y Q son dos afirmaciones, "P ⇒ Q" quiere decir: <b>siempre que P sea cierta, Q también lo es</b>.</p>
+  <div class="tip"><p><b>Idea clave.</b> Una frase "si P entonces Q" es como una regla. Una regla se rompe con <b>una sola excepción</b>. La excepción es un valor para el que P es cierta pero Q es falsa. Eso se llama <b>contraejemplo</b>. Si no existe ninguno, la regla es verdadera.</p></div>
+  <h4>Ejemplo paso a paso</h4>
+  <p>Regla: "si x es múltiplo de 6, entonces x es par".</p>
+  <ol>
+    <li>Busca una excepción: un número múltiplo de 6 que no sea par.</li>
+    <li>Prueba: 6, 12, 18, 24… todos son pares. No aparece ninguna.</li>
+    <li>Razona en general: un múltiplo de 6 es 6 · k, y 6 · k = 2 · (3k), que es 2 por algo: par.</li>
+    <li>Conclusión: la regla es <b>verdadera</b>.</li>
+  </ol>
+  <p>Otra regla: "si x² = 4, entonces x = 2". Prueba x = −2: x² = (−2)·(−2) = 4, así que la parte "si" se cumple; pero x = −2 no es 2. Eso es un contraejemplo, así que la regla es <b>falsa</b>.</p>
+  <h4>Cuidado con un detalle</h4>
+  <p>Si el valor que pruebas no cumple la parte "si", <b>no rompe la regla</b>. Con "si x es múltiplo de 6, entonces es par", el número 3 no es múltiplo de 6, así que no dice nada sobre él. Solo cuenta como excepción un número que cumple el "si" y falla el "entonces".</p>
+  <p>El libro avisa de que los ejemplos de la vida diaria ("si llueve, me mojo") confunden, porque ahí pensamos en causas y en tiempo. En matemáticas no hay causa: solo se mira si existe o no una excepción.</p>
+  <h4>Receta resumida</h4>
+  <ol><li>Si te piden refutar: busca un contraejemplo.</li><li>Si te piden probar: razona con un número cualquiera, no con ejemplos sueltos.</li></ol>`;
+
+EASY.conjuntos = `
+  <h4>Qué es un conjunto</h4>
+  <p>Un conjunto es <b>una colección de cosas distintas</b>, como una bolsa. Solo importa <b>qué hay dentro</b>: no importa el orden ni si repites algo. Por ejemplo, la lista de la compra {pan, leche, huevos} es lo mismo que {leche, huevos, pan}, y {pan, pan, leche} es lo mismo que {pan, leche}.</p>
+  <p>Se escribe con <b>llaves { }</b>, los elementos separados por comas. El libro dice que las llaves son solo para esto (p. 17). En Python es igual: <code>{1, 2, 3}</code>.</p>
+  <h4>Estar dentro: el símbolo ∈</h4>
+  <p>"3 ∈ {1, 2, 3}" se lee "3 pertenece a ese conjunto", es decir, 3 está dentro. "5 ∉ {1, 2, 3}" (con raya) significa "5 no pertenece". El libro pide decir "a es un elemento <i>de</i> A", nunca "a es un elemento" a secas (p. 16).</p>
+  <h4>El conjunto vacío ∅</h4>
+  <p>Es la bolsa sin nada. Solo hay una (p. 16).</p>
+  <h4>Definir un conjunto con una regla: el símbolo ":"</h4>
+  <p>A veces no se listan los elementos, sino que se dice qué cumplen. El símbolo <b>":" se lee "tales que"</b> (p. 16–17). Mira:</p>
+  <p class="m">{ n ∈ ℕ : n &lt; 7 }</p>
+  <p>Se lee: "los n de ℕ <b>tales que</b> n es menor que 7". Se hace así: coge los números naturales (0, 1, 2, 3…), pasa cada uno por la condición y guarda los que la cumplen. Queda {0, 1, 2, 3, 4, 5, 6}.</p>
+  <p>Otro del libro: { x ∈ {a, b, u} : x es una vocal } = {a, u}. Parte de {a, b, u}, quédate con las vocales: a y u.</p>
+  <p>Hay que decir de qué conjunto sales (el "n ∈ ℕ"). El libro avisa de que "{B : B tiene más de un elemento}" está mal porque no dice de dónde sale B.</p>
+  <h4>Operar con conjuntos: el ejemplo de los amigos</h4>
+  <p>Imagina dos grupos de amigos: A = los que van al cine = {Ana, Bea, Carlos, Dani} y B = los que van a cenar = {Carlos, Dani, Eva}.</p>
+  <div class="tblwrap"><table>
+    <tr><th>Operación</th><th>Qué significa</th><th>Resultado</th></tr>
+    <tr><td class="m">A ∪ B (unión)</td><td>los que van a <b>algo</b> (cine o cena), sin repetir</td><td>{Ana, Bea, Carlos, Dani, Eva}</td></tr>
+    <tr><td class="m">A ∩ B (intersección)</td><td>los que van a <b>las dos cosas</b></td><td>{Carlos, Dani}</td></tr>
+    <tr><td class="m">A \\ B</td><td>los que van al cine <b>pero no</b> a la cena</td><td>{Ana, Bea}</td></tr>
+  </table></div>
+  <p>Con números es igual. Con A = {1, 2, 3, 4} y B = {3, 4, 5}: A ∪ B = {1, 2, 3, 4, 5}; A ∩ B = {3, 4}; A \\ B = {1, 2}.</p>
+  <h4>Un conjunto dentro de otro: el símbolo ⊆</h4>
+  <p>"A ⊆ B" significa que <b>todo lo que hay en A también está en B</b>. {3, 4} ⊆ {1, 2, 3, 4}. El conjunto vacío está dentro de cualquier conjunto.</p>
+  <div class="note"><strong>No mezcles ∈ y ⊆.</strong> ∈ une una <b>cosa</b> con un conjunto; ⊆ une dos <b>conjuntos</b>. Con A = {1, 2}: "1 ∈ A" es cierto; "{1} ⊆ A" es cierto; pero "{1} ∈ A" es falso, porque lo que hay dentro de A es el número 1, no el conjunto {1}.</div>
+  <h4>Dos "restas" que se confunden (p. 17)</h4>
+  <p><b>A \\ B</b> es quitar de A lo que esté en B. <b>A − B</b> (solo para conjuntos de números) es restar números: coge cada número de A, réstale cada número de B, y reúne todos los resultados. Con A = {1, 2, 5} y B = {1, 2}:</p>
+  <ul>
+    <li>A \\ B = {5}.</li>
+    <li>A − B: 1−1=0, 1−2=−1, 2−1=1, 2−2=0, 5−1=4, 5−2=3 → {0, −1, 1, 4, 3} (el 0 sale dos veces, pero en un conjunto no se repite).</li>
+  </ul>
+  <h4>El conjunto de las partes ℘(X)</h4>
+  <p>La letra rara es una "P" manuscrita: ℘. ℘(X) es <b>el conjunto de todos los subconjuntos de X</b>. Es una bolsa que contiene bolsitas. Para no olvidarte ninguno, ve por tamaños. Con X = {1, 2, 3}:</p>
+  <ol>
+    <li>Subconjuntos con 0 elementos: ∅.</li>
+    <li>Con 1 elemento: {1}, {2}, {3}.</li>
+    <li>Con 2 elementos: {1,2}, {1,3}, {2,3}.</li>
+    <li>Con 3 elementos: {1,2,3}.</li>
+  </ol>
+  <p>En total, 8 bolsitas. Con 2 elementos, ℘({a, b}) = {∅, {a}, {b}, {a, b}} (4). Que con n elementos salgan 2ⁿ es matemática general: el libro no lo dice en esa página.</p>
+  <h4>La unión de muchos conjuntos: ⋃</h4>
+  <p>A ∪ B junta dos. Para juntar <b>muchos</b>, el libro usa ⋃ sobre una colección 𝔅 de conjuntos (la 𝔅 es solo una letra con otra tipografía: el nombre de la colección). A ∪ B = ⋃{A, B}.</p>
+  <h4>Los "pisos" (p. 18)</h4>
+  <p>Los elementos están en la <b>planta baja</b>; los conjuntos de elementos, en el piso 1 (℘(U)); los conjuntos de conjuntos, en el piso 2. La norma práctica: no se baja al sótano (no te preguntes "qué hay dentro del número 5").</p>
+  <h4>¿En qué se parecen y se diferencian conjunto, tupla y familia?</h4>
+  <p>Conjunto: bolsa sin orden. Tupla (pestaña 1.3): lista con orden. Familia (pestaña 1.5): casilleros con etiqueta.</p>`;
+
+EASY.tuplas = `
+  <h4>Cuando el orden sí importa</h4>
+  <p>En un conjunto no importa el orden. Pero a veces sí: tu dirección "calle 5, piso 3" no es lo mismo que "calle 3, piso 5". Eso es un <b>par ordenado</b>: dos cosas en un orden fijo, escrito con paréntesis, <b>(5, 3)</b>.</p>
+  <p>Regla del libro (p. 20): dos tuplas son iguales <b>solo si tienen la misma longitud y coinciden posición a posición</b>. Así (1, 2) ≠ (2, 1), y (1, 2) ≠ (1, 2, 2).</p>
+  <p>El libro define (a, b) como {{a}, {a, b}}. No hace falta memorizarlo: es un truco técnico para fabricar el orden usando solo conjuntos. Después se olvida. Tampoco tiene relación con ℘.</p>
+  <p>Una <b>tupla</b> es lo mismo con más elementos: (1, 2, 3) es una terna, (1, 2, 3, 4) una cuaterna, y en general una <b>n-tupla</b>. Pueden tener elementos repetidos: (1, 1, 2).</p>
+  <h4>El producto cartesiano: todas las combinaciones</h4>
+  <p>Imagina un menú: 2 primeros (sopa, ensalada) y 3 postres (flan, fruta, helado). ¿Cuántos menús distintos puedes pedir? Cada primero se puede combinar con cada postre: 2 · 3 = 6.</p>
+  <p>Eso es el <b>producto cartesiano</b>: con A = {sopa, ensalada} y B = {flan, fruta, helado}, A × B es el conjunto de todos los pares (primero, postre):</p>
+  <p class="m">(sopa,flan) (sopa,fruta) (sopa,helado) (ensalada,flan) (ensalada,fruta) (ensalada,helado)</p>
+  <p>Fórmula del libro (p. 19): A × B = {(a, b) : a ∈ A, b ∈ B}. Léela así: "los pares (a, b) tales que a está en A y b está en B".</p>
+  <div class="note"><strong>La × aquí no es multiplicar.</strong> Es el símbolo para construir pares. Lo que sí multiplicas es el número de elementos: si A tiene 2 y B tiene 3, A × B tiene 6.</div>
+  <p>Si A tiene n elementos, A × A tiene n · n. Se escribe <b>A²</b>. Por ejemplo, con A = {0, 1}: A² = {(0,0), (0,1), (1,0), (1,1)}, 4 pares. El plano de coordenadas ℝ² es el producto de la recta real por sí misma: cada punto es un par (x, y).</p>
+  <p>Nota: A × B no es igual a B × A (en uno la primera casilla viene de A y en el otro de B).</p>
+  <h4>Relaciones: una lista de pares que cumplen una regla</h4>
+  <p>Una relación en X es <b>una selección de pares de X × X</b>, los que cumplen una condición. Método de tres pasos:</p>
+  <ol>
+    <li>Escribe todos los pares posibles. Con X = {1, 2, 3} son 9: (1,1), (1,2), (1,3), (2,1), (2,2), (2,3), (3,1), (3,2), (3,3).</li>
+    <li>Para cada par, pregunta si cumple la regla. Para la regla "primero menor que segundo": (1,2) sí, (1,3) sí, (2,3) sí; los otros no.</li>
+    <li>Guarda los que sí: {(1,2), (1,3), (2,3)}.</li>
+  </ol>
+  <p>En vez de "(1,2) ∈ R" se escribe 1 R 2, o con la regla: 1 &lt; 2. Con la regla "igual a", los pares guardados serían (1,1), (2,2), (3,3).</p>
+  <h4>Relaciones de orden: total o parcial</h4>
+  <p>Una relación de orden "&lt;" cumple dos cosas: nada es menor que sí mismo, y si a &lt; b y b &lt; c entonces a &lt; c. Es <b>total</b> si, cogiendo dos elementos cualesquiera, siempre se puede decir cuál va antes (las palabras en el diccionario). Es <b>parcial</b> si hay pares que no se pueden comparar ("ser descendiente de" entre personas: dos desconocidos no son descendientes uno del otro).</p>`;
+
+EASY.funciones = `
+  <h4>Una función es una máquina</h4>
+  <p>Una función es una <b>máquina con una regla</b>: metes un número (la entrada), aplica la regla y sale otro número (la salida). La regla "multiplica por 2 y suma 1" convierte 3 en 7, 0 en 1 y 10 en 21. Se escribe g(x) = 2x + 1: "g de x" es "lo que sale al meter x".</p>
+  <p>El libro (p. 21) la define así: <b>una regla que asigna a cada elemento del dominio un único elemento del conjunto final</b>. Se escribe f : X → Y.</p>
+  <ul>
+    <li><b>Dominio X:</b> las entradas permitidas.</li>
+    <li><b>Conjunto final Y:</b> el "cajón" donde pueden caer las salidas.</li>
+    <li><b>Imagen (o recorrido):</b> las salidas que <b>realmente</b> salen.</li>
+  </ul>
+  <p>Ejemplo del libro: f(x) = (x − 3)² con entradas {2, 3, 4, 5}. Sustituye: f(2) = (−1)² = 1; f(3) = 0; f(4) = 1; f(5) = 4. La imagen es {0, 1, 4}.</p>
+  <div class="tip"><p><b>La condición clave:</b> cada entrada da <b>una sola</b> salida. Pueden salir lo mismo dos entradas distintas (f(2) y f(4) dan 1), pero una entrada no puede dar dos salidas.</p></div>
+  <h4>Tu intuición de programador</h4>
+  <p>Una función matemática es como <code>def f(x): return ...</code>. Con <code>def suma(x): return 2 + x</code>, <code>suma(2)</code> da 4. La diferencia: en matemáticas la misma entrada da <b>siempre</b> lo mismo (no hay <code>random</code>) y solo importa lo que devuelve.</p>
+  <h4>Inyectiva: no hay dos entradas con la misma salida</h4>
+  <p>Piensa en un cine: cada persona (entrada) se sienta en una butaca (salida). Es <b>inyectiva</b> si nunca se sientan dos en la misma butaca. h(x) = x² con entradas {−1, 0, 1} da 1, 0, 1: dos personas en la butaca 1, no es inyectiva.</p>
+  <h4>Biyectiva: emparejamiento perfecto</h4>
+  <p>Es inyectiva <b>y además todas las butacas se ocupan</b> (la imagen es todo el conjunto final). Ojo: depende del conjunto final que elijas. Con g(x) = 2x + 1 y entradas {0, 1, 2}, salen 1, 3, 5:</p>
+  <ul>
+    <li>Si el conjunto final es {1, 3, 5}: todas las butacas ocupadas, <b>biyectiva</b>.</li>
+    <li>Si es ℕ = {0, 1, 2, 3, …}: casi todas vacías (el 0, 2, 4, 6, 7…). Inyectiva sí; biyectiva no.</li>
+  </ul>
+  <h4>Operaciones internas: máquinas que mezclan dos y devuelven uno del mismo tipo</h4>
+  <p>La suma de naturales es una máquina que <b>recibe dos números y devuelve uno</b>. El libro la escribe así (p. 22):</p>
+  <p class="m">+ : ℕ × ℕ → ℕ &nbsp;&nbsp; (n, m) ↦ n + m</p>
+  <ol>
+    <li>"+" es el nombre de la máquina.</li>
+    <li>"ℕ × ℕ" son las entradas posibles: <b>pares</b> de naturales (la × es el producto cartesiano, no multiplicar).</li>
+    <li>"→ ℕ": la salida es un natural.</li>
+    <li>"(n, m) ↦ n + m": "al par (n, m) se le asigna n + m".</li>
+  </ol>
+  <p>Se llama "interna" porque la salida sigue en el mismo conjunto. La resta de naturales no lo es: 3 − 5 no es natural. La división tampoco vale con cualquier par (no se divide entre 0).</p>
+  <h4>Conjunto cerrado</h4>
+  <p>Un subconjunto M es <b>cerrado</b> para una operación si, <b>operando elementos de M, el resultado sigue en M</b>. Cómo comprobarlo: elige dos elementos cualesquiera de M, opera y mira si el resultado sigue en M.</p>
+  <p>Ejemplos del libro: los números impares son cerrados para la multiplicación (impar · impar = impar) y no para la suma (3 + 5 = 8, que es par). "M" es solo el nombre del subconjunto. Los "pares" son los números 0, 2, 4, 6… (no un par de cosas).</p>`;
+
+EASY.familias = `
+  <h4>Casilleros con etiqueta</h4>
+  <p>Imagina un armario con casilleros etiquetados, y en cada casillero hay un número. La etiqueta es el <b>índice</b> y lo que hay dentro es el <b>valor</b>. Una <b>familia</b> es eso (libro, p. 22): una función cuyo dominio son las etiquetas. En vez de u(i) se escribe uᵢ ("u sub i").</p>
+  <h4>Tu amiga la lista de Python</h4>
+<pre><code>u = [7, 3, 7, 9]
+u[0]   # 7    (casillero 0)
+u[2]   # 7    (casillero 2)</code></pre>
+  <p>Una lista es una familia con etiquetas 0, 1, 2, 3. Se ve que <b>admite repetidos</b> (el 7 sale dos veces), a diferencia de un conjunto. Un diccionario es una familia cuyas etiquetas son otras cosas:</p>
+<pre><code>u = {"lunes": 2, "martes": 0, "jueves": 5}
+u["jueves"]   # 5</code></pre>
+  <p>El libro lo dice: los índices <b>no tienen por qué ser números</b>, sirve cualquier conjunto (p. 23).</p>
+  <h4>Ejemplo 11 del libro con calma</h4>
+  <p>Quieren estudiar cuántos libros, entradas y suscripciones compra cada hogar. Las etiquetas son los productos I = {libros, entradas, suscripciones}. Para cada producto hay una función: dado un hogar, devuelve cuántas unidades compra. Es una <b>familia de funciones</b>.</p>
+  <p>Otra forma equivalente: una sola función u(i, h) que recibe el par (producto, hogar). En Python: <code>u[("libros", "hogar1")]</code>.</p>
+  <h4>La variable muda</h4>
+  <p>En <code>[u[i] * 2 for i in range(3)]</code> la letra i solo existe dentro de esa línea. Si la llamas k, no cambia nada. A eso el libro lo llama <b>variable muda</b> (p. 23): un nombre temporal sin importancia.</p>
+  <h4>Resumen para no liarte</h4>
+  <div class="tblwrap"><table>
+    <tr><th></th><th>Orden</th><th>Repetidos</th><th>Cómo se llega a un elemento</th></tr>
+    <tr><td>Conjunto</td><td>no</td><td>no cuentan</td><td>preguntando si está dentro</td></tr>
+    <tr><td>Tupla</td><td>sí</td><td>sí</td><td>por posición</td></tr>
+    <tr><td>Familia</td><td>por etiqueta</td><td>sí</td><td>por la etiqueta</td></tr>
+  </table></div>`;
+
+EASY.enteros = `
+  <h4>Los números naturales: contar</h4>
+  <p>Los <b>naturales</b> son los números para contar: 0, 1, 2, 3, … sin fin. Se escriben <b>ℕ</b>. En este libro el <b>0 es natural</b> (p. 24). Con ellos se puede sumar y multiplicar y el resultado siempre es otro natural. Pero no siempre se puede restar: 3 − 5 no tiene respuesta dentro de los naturales, porque no puedes tener "menos de nada". Tampoco dividir siempre: no hay natural que multiplicado por 5 dé 3.</p>
+  <h4>Los enteros: añadir los negativos</h4>
+  <p>Para poder restar siempre se inventan los números negativos, como las temperaturas bajo cero. Los <b>enteros</b> (<b>ℤ</b>) son …, −3, −2, −1, 0, 1, 2, 3, … Ahora 3 − 5 = −2. Con enteros puedes sumar, restar y multiplicar sin salirte. Dividir sigue sin funcionar siempre: 6 ÷ 4 = 1,5 no es entero.</p>
+  <h4>Reglas de signos que conviene saber</h4>
+  <ul>
+    <li>(−) · (−) = (+): (−4) · (−5) = 20.</li>
+    <li>(+) · (−) = (−): 3 · (−2) = −6.</li>
+    <li>Restar un negativo es sumar: 3 − (−4) = 7.</li>
+  </ul>
+  <h4>El orden: de menor a mayor</h4>
+  <p>… &lt; −3 &lt; −2 &lt; −1 &lt; 0 &lt; 1 &lt; 2 &lt; … Mayor es el que está más a la derecha en la recta numérica. −3 es menor que −2.</p>
+  <h4>Infinito y numerable: ¿se pueden "contar" los números?</h4>
+  <p>Un conjunto es <b>numerable</b> si puedes hacer una lista (aunque no acabe nunca) que contenga todos sus elementos, de modo que cada uno ocupe un lugar. Los naturales son numerables por definición (0, 1, 2…). Los <b>pares</b> también: lugar 0 → 0, lugar 1 → 2, lugar 2 → 4… Los días de la semana son un conjunto finito (7).</p>
+  <p>Los enteros también, pero hay que ordenarlos en zigzag: <b>0, 1, −1, 2, −2, 3, −3…</b> (libro, p. 25). Así a cada entero le toca un lugar. Fórmula: en el lugar n (empezando en n = 0), si n es impar el entero es (n+1)/2, y si n es par es −n/2.</p>
+  <h4>El cero tiene mérito</h4>
+  <p>Aunque algunos libros no lo cuentan como natural, el cero permitió la numeración que usamos hoy: sirve para marcar posiciones y distinguir 35, 305 y 3005 (Nota 1, p. 25).</p>
+  <h4>Un adelanto: los racionales</h4>
+  <p>Un número racional es el que se escribe como una <b>fracción de dos enteros</b>, como 3/4 o −7/2. No es "cualquier número con decimales": π tiene decimales y no es una fracción.</p>`;
+
+EASY.bases = `
+  <h4>Número no es lo mismo que cómo se escribe</h4>
+  <p>"Diecinueve" se escribe 19 con nuestro sistema y XIX en números romanos. Es <b>el mismo número</b> escrito de dos maneras (libro, p. 26). Una <b>base</b> es una manera de escribir los números. Nosotros usamos la base 10 porque tenemos 10 dedos; los ordenadores usan la base 2.</p>
+  <h4>Cómo funciona la base 10 (el cuentakilómetros)</h4>
+  <p>Piensa en un cuentakilómetros: cada rueda tiene los dígitos 0 a 9. Cuando una rueda llega a 9 y avanza, vuelve a 0 y la rueda de su izquierda avanza uno. Por eso después de 9 viene <b>10</b>: "una vuelta completa de la rueda de las unidades, y las unidades a cero".</p>
+  <p>El valor de cada cifra depende de <b>dónde</b> está. En 3482:</p>
+  <p class="m">3482 = 3·1000 + 4·100 + 8·10 + 2·1</p>
+  <p>Y 1000 = 10³, 100 = 10², 10 = 10¹, 1 = 10⁰. Esos números (1, 10, 100, 1000…) son los <b>pesos</b> de cada posición. En base 10 cada posición vale <b>10 veces más</b> que la de su derecha.</p>
+  <p>Un 0 en medio también cuenta como cifra: 5207 = 5·1000 + 2·100 + <b>0·10</b> + 7.</p>
+  <h4>La misma idea con otra base</h4>
+  <p>Una base b usa <b>b cifras</b> (de 0 a b−1) y cada posición vale <b>b veces más</b> que la de su derecha. La fórmula del libro (la 1, p. 28):</p>
+  <p class="m">n = aₖ·bᵏ + … + a₂·b² + a₁·b + a₀</p>
+  <p>Cómo leerla: las letras a₀, a₁, a₂ son las cifras del número contando <b>desde la derecha empezando en 0</b>; b es la base; bⁱ es el peso de esa posición. Ejemplo: en 3482 (base 10), a₀ = 2, a₁ = 8, a₂ = 4, a₃ = 3. Es la misma suma de arriba.</p>
+  <div class="note"><strong>Errata del libro (p. 28):</strong> la fórmula repite "a₂b" y debería terminar en "…+ a₂b² + a₁b + a₀". Está corregida aquí. Tampoco es correcto el "3·16²" del Ejemplo 12: debe ser 3·16 (el resultado 3898 es correcto).</div>
+  <h4>Las bases que vas a usar</h4>
+  <div class="tblwrap"><table>
+    <tr><th>Base</th><th>Cifras</th><th>Pesos (derecha a izquierda)</th></tr>
+    <tr><td>2 (binario)</td><td class="m">0, 1</td><td class="m">1, 2, 4, 8, 16, 32, 64, 128…</td></tr>
+    <tr><td>8 (octal)</td><td class="m">0 a 7</td><td class="m">1, 8, 64, 512…</td></tr>
+    <tr><td>10 (decimal)</td><td class="m">0 a 9</td><td class="m">1, 10, 100, 1000…</td></tr>
+    <tr><td>16 (hexadecimal)</td><td class="m">0 a 9 y A a F</td><td class="m">1, 16, 256, 4096…</td></tr>
+  </table></div>
+  <p>Para el hexadecimal faltan símbolos, así que se usan letras: <b>A = 10, B = 11, C = 12, D = 13, E = 14, F = 15</b>. Contando en hexadecimal: …, 8, 9, A, B, C, D, E, F, y después <b>10₁₆</b> = 16 (una "vuelta completa" de 16 y cero unidades). Por eso la posición de la izquierda vale 16.</p>
+  <p>Cuando mezclas bases, se indica con un subíndice: 1101₂ es "1101 en base 2". Si no hay peligro de confusión se omite (p. 29).</p>
+  <h4>Receta 1: de otra base a decimal</h4>
+  <ol>
+    <li>Escribe las cifras y debajo sus <b>pesos</b> (empieza por 1 a la derecha y ve multiplicando por la base).</li>
+    <li>Multiplica cada cifra por su peso.</li>
+    <li>Suma todo.</li>
+  </ol>
+  <p><b>Ejemplo: 1101₂.</b></p>
+  <div class="tblwrap"><table><tr><th>Cifra</th><td class="m">1</td><td class="m">1</td><td class="m">0</td><td class="m">1</td></tr><tr><th>Peso</th><td class="m">8</td><td class="m">4</td><td class="m">2</td><td class="m">1</td></tr><tr><th>Cifra × peso</th><td class="m">8</td><td class="m">4</td><td class="m">0</td><td class="m">1</td></tr></table></div>
+  <p>Suma: 8 + 4 + 0 + 1 = <b>13</b>.</p>
+  <p><b>Ejemplo hexadecimal: 3B₁₆.</b> Pesos 16 y 1. B vale 11. 3·16 + 11·1 = 48 + 11 = <b>59</b>.</p>
+  <h4>Receta 2: de decimal a otra base (divisiones)</h4>
+  <p>Idea: el último dígito de un número en base b es lo que <b>sobra</b> al dividirlo entre b. Se hacen divisiones <b>enteras</b> (cuántas veces cabe, y cuánto sobra; sin decimales):</p>
+  <ol>
+    <li>Divide el número entre la base. Anota el <b>resto</b> (lo que sobra).</li>
+    <li>Divide el <b>cociente</b> otra vez entre la base y anota el resto.</li>
+    <li>Repite <b>hasta que el cociente sea 0</b> (no hasta 1).</li>
+    <li>Lee los restos <b>de abajo hacia arriba</b>: el primer resto es la cifra de la derecha, así que se escribe último.</li>
+    <li>Comprueba pasándolo de vuelta a decimal (receta 1).</li>
+  </ol>
+  <p><b>Ejemplo: 37 a binario.</b></p>
+  <div class="tblwrap"><table>
+    <tr><th>División</th><th>Cociente</th><th>Resto</th></tr>
+    <tr><td>37 ÷ 2</td><td>18</td><td>1</td></tr>
+    <tr><td>18 ÷ 2</td><td>9</td><td>0</td></tr>
+    <tr><td>9 ÷ 2</td><td>4</td><td>1</td></tr>
+    <tr><td>4 ÷ 2</td><td>2</td><td>0</td></tr>
+    <tr><td>2 ÷ 2</td><td>1</td><td>0</td></tr>
+    <tr><td>1 ÷ 2</td><td>0</td><td>1</td></tr>
+  </table></div>
+  <p>Restos de abajo hacia arriba: <b>100101</b>. Comprobación: 32 + 4 + 1 = 37 ✓.</p>
+  <p><b>Ejemplo: 45 a base 4</b> (libro, Ejemplo 14): 45 = 4·11 + 1; 11 = 4·2 + 3; 2 = 4·0 + 2. Restos: 1, 3, 2. Al revés: <b>231₄</b>. Comprobación: 2·16 + 3·4 + 1 = 45 ✓.</p>
+  <div class="tip"><p><b>Un atajo solo para binario:</b> mira los pesos 64, 32, 16, 8, 4, 2, 1 y pon un 1 en los que "sumas" y un 0 en los demás. 37 = 32 + 4 + 1 → 100101. En otras bases no basta con 0 o 1 y hay que dividir.</p></div>
+  <h4>Receta 3: binario ↔ hexadecimal y octal sin pasar por decimal</h4>
+  <p>Un dígito hexadecimal equivale a <b>4 bits</b> (16 = 2⁴) y uno octal a <b>3 bits</b> (8 = 2³). Eso permite un atajo:</p>
+  <ol>
+    <li>Corta el binario en grupos de 4 (hex) o 3 (octal), <b>empezando por la derecha</b>. Si falta, añade ceros a la izquierda.</li>
+    <li>Convierte cada grupo con los pesos 8-4-2-1 (o 4-2-1).</li>
+    <li>Escribe las cifras seguidas. <b>No se multiplican ni se suman entre sí.</b></li>
+  </ol>
+  <p><b>Ejemplo 10111010₂ → hexadecimal:</b> 1011 | 1010 → 11 = B y 10 = A → <b>BA₁₆</b>.<br><b>Mismo número → octal:</b> 010 | 111 | 010 → 2, 7, 2 → <b>272₈</b>.</p>
+  <p>Esto es lo que usan los programadores: un byte son 8 bits, o sea, <b>2 cifras hexadecimales</b> (por ejemplo 11111111₂ = FF₁₆, p. 27).</p>
+  <h4>Errores típicos</h4>
+  <ul>
+    <li>Parar la división cuando el cociente es 1 (hay que seguir hasta 0).</li>
+    <li>Leer los restos en el orden en que salieron (hay que invertirlos).</li>
+    <li>Poner el 5 en binario: en base 2 solo existen 0 y 1.</li>
+    <li>Multiplicar por 8 al pasar de binario a octal: solo se agrupan bits.</li>
+  </ul>`;
+
+EASY.racionales = `
+  <h4>Fracciones: repartir</h4>
+  <p>Una fracción como 3/4 significa "3 partes de las 4 en que se ha cortado algo", por ejemplo 3 trozos de una pizza cortada en 4. El número de abajo (<b>denominador</b>) dice en cuántas partes se corta; el de arriba (<b>numerador</b>) cuántas partes coges.</p>
+  <p>El conjunto de los números que se escriben como una fracción de enteros (con denominador ≠ 0) se llama <b>racionales</b>, <b>ℚ</b> (libro, p. 30). Un racional no es "cualquier decimal": π tiene decimales sin fin y no es racional.</p>
+  <h4>Las cuatro reglas de las fracciones (matemática general)</h4>
+  <ol>
+    <li><b>Multiplicar:</b> arriba por arriba, abajo por abajo. 2/5 · 3/7 = 6/35.</li>
+    <li><b>Sumar con el mismo denominador:</b> se suman los de arriba y el de abajo se queda. 2/9 + 4/9 = 6/9 = 2/3.</li>
+    <li><b>Sumar con distinto denominador:</b> primero iguala los de abajo. 1/2 + 1/3: un múltiplo común de 2 y 3 es 6; 1/2 = 3/6 y 1/3 = 2/6; suma: 5/6. <b>Nunca</b> sumes los denominadores (1/2 + 1/2 daría 2/4, que es 1/2 y no 1).</li>
+    <li><b>Dividir:</b> da la vuelta a la segunda y multiplica. (1/2) ÷ (3/5) = (1/2) · (5/3) = 5/6.</li>
+  </ol>
+  <p><b>Simplificar</b> es dividir arriba y abajo entre el mismo número: 15/48 = 5/16 (entre 3). Una fracción está simplificada cuando no se puede dividir más.</p>
+  <h4>Un racional escrito con decimales</h4>
+  <p>Dividir 3 entre 8 da 0,375 y se acaba (decimal <b>exacto</b>). Dividir 1 entre 3 da 0,3333… sin acabar, pero con un bloque que se <b>repite</b>: eso es un decimal <b>periódico</b>. El bloque que se repite es el <b>periodo</b>. Si el periodo empieza justo tras la coma, es periódico <b>puro</b> (0,333…). Si antes hay cifras que no se repiten (el <b>anteperiodo</b>), es <b>mixto</b> (1,1666…: el 1 no se repite, el 6 sí).</p>
+  <h4>Por qué siempre acaban repitiéndose (p. 32)</h4>
+  <p>Al dividir p entre q "bajas un cero" y repites la división entera con el resto. Pero los restos posibles son solo 0, 1, …, q−1, <b>un número limitado</b>. Tarde o temprano sale un resto repetido, y a partir de ahí todo se repite. Por eso <b>todo racional tiene un decimal que acaba o se repite</b>, y recíprocamente.</p>
+  <p>Ejemplo del libro (Ejemplo 20): 3/8. 30 = 3·8 + 6; 60 = 7·8 + 4; 40 = 5·8 + 0. Cifras: 3, 7, 5 → 0,375.</p>
+  <p>Un dato curioso: 0,999… es exactamente 1 (p. 33).</p>
+  <h4>De decimal periódico a fracción (la fracción generatriz)</h4>
+  <p>Truco: multiplica por 10 (o 100, 1000) para que, al restar, <b>desaparezca la parte que se repite</b>.</p>
+  <p><b>Ejemplo sencillo: 0,333…</b></p>
+  <ol>
+    <li>Llama x = 0,333…</li>
+    <li>El periodo tiene 1 cifra, así que multiplica por 10: 10x = 3,333…</li>
+    <li>Resta: 10x − x = 3,333… − 0,333… = 3, o sea 9x = 3.</li>
+    <li>Despeja: x = 3/9 = 1/3.</li>
+  </ol>
+  <p><b>Ejemplo periódico puro con 2 cifras: 3,4545…</b> Periodo de 2 cifras → multiplica por 100: 100x = 345,4545… Resta: 99x = 342, x = 342/99 = 38/11.</p>
+  <p><b>Ejemplo mixto: 2,1363636…</b> Primero multiplica por 10 para dejar el anteperiodo antes de la coma: 10x = 21,3636…; luego por 1000: 1000x = 2136,3636… Resta: 990x = 2115, x = 2115/990 = 47/22.</p>
+  <h4>Cifras significativas y notación científica</h4>
+  <p>Son una forma de decir "con cuánta precisión" escribes un número. Las <b>cifras significativas</b> son las que aportan información: se cuentan desde la primera cifra que no es cero. 5,67 tiene 3; 0,0497 tiene 3 (los ceros iniciales no cuentan); 40000 tiene 1 (los ceros finales de un número entero no cuentan para este libro, p. 34).</p>
+  <p>La <b>notación científica</b> deja una sola cifra antes de la coma y multiplica por una potencia de 10: 23,567 = 2,3567 × 10¹ y 0,0497 = 4,97 × 10⁻². Se suele escribir 4,97E−2.</p>
+  <p>Por qué importa para IA: los ordenadores guardan los números con una cantidad limitada de cifras (estándar IEEE 754): 32 bits en precisión simple y 64 en doble (p. 36).</p>`;
+
+EASY.reales = `
+  <h4>Números que no son fracciones</h4>
+  <p>Hay números que no se pueden escribir como fracción de enteros. Los más famosos: <b>√2</b> (el número que multiplicado por sí mismo da 2, 1,41421356…) y <b>π</b> (3,14159265…). Sus decimales no se acaban <b>y tampoco se repiten nunca</b>. Se llaman <b>irracionales</b>. Todos los racionales y todos los irracionales juntos forman los <b>números reales, ℝ</b>.</p>
+  <p>El libro (p. 36) lo define con más rigor, como el menor cuerpo ordenado completo que contiene a ℚ. Lo que importa a nivel práctico: los reales son <b>todos los puntos de una recta</b>, sin huecos. Entre la fracción 1,4 y la fracción 1,5 hay infinitos racionales, e infinitos irracionales.</p>
+  <h4>Los reales no se pueden enumerar</h4>
+  <p>Los naturales, enteros y racionales se pueden meter en una lista (numerables). Los reales <b>no</b>. El argumento (p. 37) es ingenioso: si tuvieras una lista de todos los reales entre 0 y 1, puedes fabricar uno que cambie la primera cifra del primero, la segunda cifra del segundo, etc. Ese número no está en la lista. Así que la lista nunca está completa.</p>
+  <h4>Redondear: elegir el número más cercano que puedes escribir</h4>
+  <p>Un ordenador no puede guardar infinitas cifras. Hay que <b>redondear</b>: cambiar el número por el más cercano de los que sí puede escribir (p. 38). Receta para redondear a 3 cifras significativas:</p>
+  <ol>
+    <li>Cuenta 3 cifras desde la primera que no sea cero.</li>
+    <li>Mira lo que viene después: si es menos de la mitad (menos de 5), te quedas; si es más de la mitad, subes la última cifra.</li>
+    <li><b>Si está justo a la mitad</b> (empate): elige el candidato cuya última cifra sea <b>par</b>.</li>
+  </ol>
+  <p>Ejemplos: 2,71828 → 2,72 (la cifra siguiente es 8, sube). 0,0123456 → 0,0123 (los ceros iniciales no cuentan; lo que sigue es 456, menos de la mitad). 4,675: está justo entre 4,67 y 4,68; se elige el de cifra par, <b>4,68</b>. 8,465: entre 8,46 y 8,47 → <b>8,46</b>.</p>
+  <p>La regla del par se usa porque así los errores se compensan: si siempre subieras en los empates, el error se acumularía en un solo sentido (p. 38).</p>
+  <h4>El curioso caso de 0,1 + 0,2</h4>
+  <p>En Python, 0.1 + 0.2 da 0.30000000000000004. No es un fallo. En base 10, 0,1 es un decimal exacto, pero en base 2 es periódico (0,000110011…), igual que 1/3 lo es en base 10. El ordenador lo corta y comete un error diminuto. Al sumar los dos recortes sale un valor ligeramente distinto de 0,3 (Ejemplo 32, p. 40).</p>
+  <p>Para dinero, se usa el módulo <code>decimal</code> de Python, que trabaja con decimales exactos (Ejemplo 33).</p>`;
+
+EASY.complejos = `
+  <h4>El problema que lo originó</h4>
+  <p>La ecuación x² = −1 no tiene solución entre los números reales, porque cualquier número real elevado al cuadrado da cero o positivo ((−2)² = 4, 2² = 4). Los matemáticos hicieron algo atrevido: <b>inventaron un número nuevo, i</b>, que cumple <b>i² = −1</b> (libro, p. 42). No es "misterioso": es una definición, como la de cualquier otra unidad.</p>
+  <h4>Cómo es un número complejo</h4>
+  <p>Todo número complejo se escribe <b>a + bi</b>, donde a y b son números reales normales. <b>a</b> es la parte real y <b>b</b> la parte imaginaria (ojo: b es un número real, sin la i). Por ejemplo: 3 + 4i, −2 + i, 5 (que es 5 + 0i) y 7i (que es 0 + 7i). El conjunto de todos es <b>ℂ</b>.</p>
+  <h4>Se opera como con letras</h4>
+  <p>Truco para todo: trata a i como si fuera una letra x, pero <b>cada vez que salga i·i, cámbialo por −1</b>.</p>
+  <ul>
+    <li><b>Sumar:</b> suma por separado reales e imaginarios. (5 + 7i) + (−1 + 2i) = 4 + 9i.</li>
+    <li><b>Multiplicar:</b> aplica la propiedad distributiva (cada término con cada término). (5 + 7i)(−1 + 2i) = −5 + 10i − 7i + 14i². Como i² = −1: 14i² = −14. Queda −19 + 3i.</li>
+  </ul>
+  <h4>Potencias de i: un ciclo de 4</h4>
+  <p>i¹ = i, i² = −1, i³ = i²·i = −i, i⁴ = i²·i² = (−1)(−1) = 1. Después se repite. Para calcular iᵏ: divide k entre 4 y mira el <b>resto</b>.</p>
+  <div class="tblwrap"><table><tr><th>Resto de k ÷ 4</th><td class="m">0</td><td class="m">1</td><td class="m">2</td><td class="m">3</td></tr><tr><th>iᵏ</th><td class="m">1</td><td class="m">i</td><td class="m">−1</td><td class="m">−i</td></tr></table></div>
+  <p>Ejemplo: i¹³: 13 ÷ 4 = 3 y sobra 1, luego i¹³ = i¹ = i.</p>
+  <h4>El conjugado</h4>
+  <p>El conjugado de a + bi es a − bi (cambias el signo de la parte imaginaria). Al multiplicar un complejo por su conjugado sale un número real: (a + bi)(a − bi) = a² + b². Eso sirve para <b>dividir</b>.</p>
+  <h4>Dividir complejos</h4>
+  <p>Multiplica arriba y abajo por el conjugado del denominador, para que abajo quede un número real. Ejemplo: (5 + 2i)/(1 − 3i). El conjugado de 1 − 3i es 1 + 3i.</p>
+  <ol>
+    <li>Arriba: (5 + 2i)(1 + 3i) = 5 + 15i + 2i + 6i² = 5 + 17i − 6 = −1 + 17i.</li>
+    <li>Abajo: (1 − 3i)(1 + 3i) = 1² + 3² = 10.</li>
+    <li>Resultado: −1/10 + (17/10)i.</li>
+  </ol>
+  <h4>El plano complejo y el módulo</h4>
+  <p>El número a + bi se dibuja como el punto (a, b) del plano: a es "cuánto a la derecha" y b es "cuánto arriba" (libro, p. 46). El <b>módulo</b> |z| es la distancia desde el origen hasta el punto; por Pitágoras: <b>|z| = √(a² + b²)</b>. Ejemplo: |3 + 4i| = √(9 + 16) = 5.</p>
+  <h4>Forma polar y fórmula de Euler (resumen)</h4>
+  <p>Un punto también se puede describir con su distancia r al origen y el ángulo θ que forma con el eje horizontal: z = r(cos θ + i sen θ). La fórmula de Euler, e<sup>iθ</sup> = cos θ + i sen θ, lo escribe como <b>z = r·e<sup>iθ</sup></b>. Multiplicar complejos equivale a multiplicar distancias y <b>sumar ángulos</b>. Por eso multiplicar por i hace girar un cuarto de vuelta. Para elevar a potencias (Moivre): zⁿ = rⁿ e<sup>inθ</sup>. De ahí, p. ej., (1 + i)¹² = −64 (Ejemplo 40).</p>
+  <div class="note"><strong>Errata del libro (p. 48):</strong> las series de eˣ, cos x y sen x empiezan en n = 1 y deberían empezar en n = 0.</div>
+  <h4>Ecuaciones de segundo grado y el Teorema Fundamental del Álgebra</h4>
+  <p>La fórmula x = (−b ± √(b² − 4ac)) / (2a) da las soluciones de ax² + bx + c = 0. Lo de dentro de la raíz es el <b>discriminante</b>:</p>
+  <ul>
+    <li>Positivo: dos soluciones reales.</li>
+    <li>Cero: una solución (doble).</li>
+    <li><b>Negativo:</b> dos soluciones <b>complejas conjugadas</b>. El discriminante sigue siendo un número real (negativo); lo que se vuelve imaginario es su raíz, porque √−16 = √16 · √−1 = 4i.</li>
+  </ul>
+  <p>Ejemplo: x² + 2x + 5 = 0. Discriminante: 4 − 20 = −16. Raíz: 4i. x = (−2 ± 4i)/2 = −1 ± 2i.</p>
+  <p>El <b>Teorema Fundamental del Álgebra</b> (p. 53) dice que todo polinomio no constante tiene al menos una raíz compleja, y que uno de grado n tiene exactamente n raíces contando repeticiones. Por eso los complejos son tan útiles más adelante, para descomponer polinomios y para diagonalizar matrices.</p>`;
+
+/* ----- Pestaña 0: lo que el libro da por sabido ----- */
+TABS.unshift({
+  id: "previo", num: "0", name: "Antes de empezar", pg: "repaso",
+  src: "<b>Fuente:</b> la <i>Guía de estudio</i> recomienda repasar álgebra elemental, ecuaciones simples, matrices elementales, vectores y funciones antes de empezar (apartado «Requisitos»). Esta pestaña es <b>matemática general</b>: no sale de las páginas del libro. Ejercicios propios.",
+  theory: `
+    <h4>Cómo usar esta pestaña</h4>
+    <p>Aquí está lo que el libro da por sabido. Si ya lo dominas, pasa a 1.1. Si no, léelo con calma y haz los ejercicios.</p>
+    <h4>1. Las letras sustituyen números</h4>
+    <p>Una <b>variable</b> es una letra que guarda un número, igual que en Python <code>x = 5</code>. "x + 3" con x = 5 vale 8. El punto o la omisión del signo también multiplican: 2x significa 2 · x.</p>
+    <h4>2. Los signos</h4>
+    <div class="tblwrap"><table>
+      <tr><th>Signo</th><th>Significado</th></tr>
+      <tr><td class="m">+ − · (×) ÷ (/)</td><td>sumar, restar, multiplicar, dividir</td></tr>
+      <tr><td class="m">=</td><td>"es igual a"</td></tr>
+      <tr><td class="m">≠</td><td>"es distinto de"</td></tr>
+      <tr><td class="m">&lt; &gt;</td><td>menor que, mayor que</td></tr>
+      <tr><td class="m">≤ ≥</td><td>menor o igual, mayor o igual</td></tr>
+      <tr><td class="m">≈</td><td>"aproximadamente"</td></tr>
+    </table></div>
+    <h4>3. El orden de las operaciones</h4>
+    <p>No se hace de izquierda a derecha sin más. El orden es: <b>paréntesis → potencias y raíces → multiplicar y dividir → sumar y restar</b>. 3 + 4 · 2 = 3 + 8 = 11 (no 14). Con paréntesis: (3 + 4) · 2 = 14. Entre operaciones del mismo nivel, de izquierda a derecha: 10 − 2 − 3 = 5.</p>
+    <h4>4. Números negativos</h4>
+    <p>Menos por menos da más: (−3) · (−2) = 6. Más por menos da menos: 3 · (−2) = −6. Restar un negativo es sumar: 5 − (−2) = 7. El cuadrado de un negativo es positivo: (−3)² = 9.</p>
+    <h4>5. Potencias y raíces</h4>
+    <p>Una <b>potencia</b> es multiplicar un número por sí mismo varias veces: 2³ = 2 · 2 · 2 = 8. El número pequeño es el <b>exponente</b>. 5² = 25. Cualquier número elevado a 0 vale 1 (10⁰ = 1) y a 1 se queda igual. Con base 10: 10² = 100, 10³ = 1000.</p>
+    <p>La <b>raíz cuadrada</b> deshace el cuadrado: √49 = 7 porque 7² = 49. Algunas son exactas (√49 = 7) y otras no (√2 = 1,41421356…, que no se acaba).</p>
+    <h4>6. Fracciones</h4>
+    <p>Las cuatro reglas están explicadas en la pestaña 3. Resumen: multiplicar es arriba por arriba y abajo por abajo; para sumar hay que igualar denominadores; para dividir se da la vuelta a la segunda.</p>
+    <h4>7. Ecuaciones sencillas</h4>
+    <p>Una <b>ecuación</b> es una igualdad con una incógnita (por ejemplo x) que hay que descubrir. Regla de oro: <b>lo que hagas a un lado, hazlo al otro</b>, para que siga siendo igual. Ejemplo: 2x + 1 = 9.</p>
+    <ol>
+      <li>Resta 1 a los dos lados: 2x = 8.</li>
+      <li>Divide los dos lados entre 2: x = 4.</li>
+      <li>Comprueba: 2 · 4 + 1 = 9 ✓.</li>
+    </ol>
+    <p>Ecuaciones de segundo grado (ax² + bx + c = 0) se explican con detalle en la pestaña 5.</p>
+    <h4>8. Los símbolos que irás viendo</h4>
+    <p>Cada uno se explica en su pestaña: ∈ ∉ ⊆ ∪ ∩ ∅ ℘ (conjuntos, 1.2), ⇒ (lógica, 1.1), × (producto cartesiano, 1.3), → ↦ (funciones, 1.4), ℕ ℤ ℚ ℝ ℂ (conjuntos de números, pestañas 2.1 a 5).</p>`,
+  faq: [],
+  groups: [{
+    title: "Operaciones, potencias, fracciones y ecuaciones",
+    intro: "Respuestas numéricas o fracciones simplificadas (por ejemplo 3/4).",
+    solved: [
+      E("Calcula 3 + 4 · 2.", ["Primero multiplicar: 4 · 2 = 8.", "Luego sumar: 3 + 8."], "11"),
+      E("Calcula (3 + 4) · 2.", ["Primero el paréntesis: 7.", "7 · 2."], "14"),
+      E("Calcula 2³.", ["2 · 2 · 2 = 8."], "8"),
+      E("Calcula √49.", ["7 · 7 = 49."], "7"),
+      E("Resuelve x + 5 = 12.", ["Resta 5 a los dos lados."], "7"),
+      E("Calcula 1/2 + 1/3.", ["Denominador común 6: 3/6 + 2/6."], "5/6")
+    ],
+    todo: [
+      T("Calcula 10 − 2 · 3.", "num", "4", ["2 · 3 = 6.", "10 − 6."], "4"),
+      T("Calcula (10 − 2) · 3.", "num", "24", ["8 · 3."], "24"),
+      T("Calcula 5².", "num", "25", ["5 · 5."], "25"),
+      T("Resuelve 2x + 1 = 9.", "num", "4", ["2x = 8; x = 4."], "4"),
+      T("Calcula 2/5 + 1/5.", "num", "3/5", ["Mismo denominador: 3/5."], "3/5"),
+      T("Calcula 2/3 · 3/4 (simplificado).", "num", "1/2", ["6/12 = 1/2."], "1/2")
+    ]
+  }],
+  py: `
+    <h4>Operaciones básicas en Python</h4>
+<pre><code>3 + 4 * 2        # 11   (Python respeta el orden de las operaciones)
+(3 + 4) * 2      # 14
+2 ** 3           # 8    (** es la potencia)
+49 ** 0.5        # 7.0  (raíz cuadrada como potencia 1/2)
+x = 5            # una variable
+x + 3            # 8</code></pre>
+    <h4>Fracciones y ecuaciones</h4>
+<pre><code>from fractions import Fraction
+Fraction(1, 2) + Fraction(1, 3)    # 5/6
+
+# Resolver 2x + 1 = 9: "lo que hagas a un lado, hazlo al otro"
+x = (9 - 1) / 2                    # 4.0</code></pre>`
+});
+
+/* ================= COMPROBACIÓN DE RESPUESTAS ================= */
+function norm(s) {
+  return String(s).trim().toLowerCase().replace(/[−–]/g, "-").replace(/\s+/g, "").replace(/…/g, "...");
+}
+function normText(s) {
+  return norm(s).replace(/[₀-₉]/g, "").replace(/\(\d+\)$/, "").replace(/_\d+$/, "").replace(/^0[box]/, "");
+}
+function gcd(a, b) { a = Math.abs(a); b = Math.abs(b); while (b) { [a, b] = [b, a % b]; } return a; }
+function evalNum(s) {
+  s = norm(s).replace(",", ".").replace(/^\+/, "");
+  let m = s.match(/^(-?[\d.]+)\/(-?[\d.]+)$/);
+  if (m) { const d = parseFloat(m[2]); return d === 0 ? NaN : parseFloat(m[1]) / d; }
+  if (/^-?[\d.]+$/.test(s)) return parseFloat(s);
+  return NaN;
+}
+function near(a, b) { return Math.abs(a - b) <= 1e-6 * Math.max(1, Math.abs(b)); }
+function splitTop(s) {
+  const out = []; let d = 0, cur = "";
+  for (const ch of s) {
+    if ("({[".includes(ch)) d++;
+    if (")}]".includes(ch)) d--;
+    if (ch === "," && d === 0) { out.push(cur); cur = ""; } else cur += ch;
+  }
+  if (cur !== "") out.push(cur);
+  return out;
+}
+function canon(s) {
+  s = norm(s);
+  if (s === "∅" || s === "{}" || s === "vacio") return "{}";
+  if (s[0] === "{" && s.endsWith("}")) {
+    const inner = s.slice(1, -1);
+    const items = inner === "" ? [] : splitTop(inner).map(canon);
+    return "{" + [...new Set(items)].sort().join(",") + "}";
+  }
+  if (s[0] === "(" && s.endsWith(")")) return "(" + splitTop(s.slice(1, -1)).map(canon).join(",") + ")";
+  return s;
+}
+function parseCx(s) {
+  s = norm(s).replace(/j/g, "i").replace(/[·*]/g, "").replace(/,/g, ".");
+  if (!s) return null;
+  const terms = s.match(/[+-]?[^+-]+/g);
+  if (!terms || terms.join("") !== s) return null;
+  let re = 0, im = 0;
+  for (const t of terms) {
+    if (t.endsWith("i")) {
+      let c = t.slice(0, -1);
+      if (c === "" || c === "+") c = "1"; else if (c === "-") c = "-1";
+      const v = evalNum(c); if (isNaN(v)) return null; im += v;
+    } else {
+      const v = evalNum(t); if (isNaN(v)) return null; re += v;
+    }
+  }
+  return [re, im];
+}
+function check(ex, input) {
+  const raw = String(input).trim();
+  if (!raw) return null;
+  switch (ex.type) {
+    case "vf": {
+      const v = norm(raw), yes = ["v", "verdadero", "verdadera", "cierto", "cierta", "si", "sí", "true"], no = ["f", "falso", "falsa", "no", "false"];
+      const want = norm(ex.ans);
+      return want === "v" ? yes.includes(v) : no.includes(v);
+    }
+    case "num": {
+      const a = evalNum(raw), b = evalNum(ex.ans);
+      if (isNaN(a) || !near(a, b)) return false;
+      if (/\//.test(ex.ans) && /^-?\d+\/\d+$/.test(norm(raw))) {
+        const [p, q] = norm(raw).split("/").map(Number); if (gcd(p, q) !== 1) return false;
+      }
+      return true;
+    }
+    case "set": return canon(raw) === canon(ex.ans);
+    case "seq": {
+      const clean = (x) => {
+        x = x.trim().replace(/[;]+/g, ",");
+        if (!x.includes(",")) x = x.replace(/\s+/g, ",");
+        return splitTop(x.replace(/^[\[(]|[\])]$/g, "")).map(t => norm(t).replace(/^[a-z]=/, ""));
+      };
+      const A = clean(raw), B = clean(ex.ans);
+      return A.length === B.length && A.every((t, i) => { const x = evalNum(t), y = evalNum(B[i]); return isNaN(x) || isNaN(y) ? t === B[i] : near(x, y); });
+    }
+    case "text": return ex.ans.map(normText).includes(normText(raw));
+    case "sci": {
+      const m = norm(raw).replace(",", ".").match(/^(-?[\d.]+)(?:[*x×·]10\^?|e)\+?(-?\d+)$/);
+      const val = m ? parseFloat(m[1]) * Math.pow(10, parseInt(m[2], 10)) : evalNum(raw);
+      if (isNaN(val) || !near(val, evalNum(ex.ans.replace(/e/, "e").includes("e") ? String(parseFloat(ex.ans)) : ex.ans))) return false;
+      return !m || (parseFloat(m[1]) >= 1 && parseFloat(m[1]) < 10);
+    }
+    case "cx": {
+      const a = parseCx(raw), b = parseCx(ex.ans);
+      return !!a && !!b && near(a[0], b[0]) && near(a[1], b[1]);
+    }
+  }
+  return false;
+}
+
+/* ================= RENDER ================= */
+const $tabs = document.getElementById("tabs");
+const $main = document.getElementById("main");
+const store = {
+  get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+  set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+};
+function totals(t) {
+  let ok = 0, all = 0;
+  t.groups.forEach((g, gi) => g.todo.forEach((_, i) => { all++; if (store.get("ok:" + t.id + ":" + gi + ":" + i) === "1") ok++; }));
+  return [ok, all];
+}
+function renderTabs(activeId) {
+  $tabs.innerHTML = "";
+  TABS.forEach(t => {
+    const [ok, all] = totals(t);
+    const b = document.createElement("button");
+    b.className = "tab"; b.setAttribute("role", "tab"); b.id = "tab-" + t.id;
+    b.setAttribute("aria-selected", t.id === activeId ? "true" : "false");
+    b.setAttribute("aria-controls", "main");
+    b.innerHTML = '<span class="n">' + t.num + '</span><span>' + t.name + '</span><span class="badge-n" id="bd-' + t.id + '">' + ok + '/' + all + '</span>';
+    b.addEventListener("click", () => go(t.id, true));
+    $tabs.appendChild(b);
+  });
+  const sel = document.getElementById("tab-" + activeId);
+  if (sel && sel.scrollIntoView) sel.scrollIntoView({ block: "nearest", inline: "center" });
+}
+function solHtml(ex) {
+  return '<details class="sol"><summary>Ver solución paso a paso</summary><ol class="steps">' +
+    ex.steps.map(s => '<li>' + s + '</li>').join("") + '</ol><div class="res">Resultado: ' + ex.res + '</div></details>';
+}
+function renderPanel(t) {
+  let h = '<section class="panel" role="tabpanel" aria-labelledby="tab-' + t.id + '">';
+  h += '<h2>' + t.num + ' · ' + t.name + '</h2><p class="src">' + t.src + '</p>';
+  const easy = mode === "easy" && EASY[t.id];
+  h += '<h3 class="sec">Explicación' + (easy ? ' · para dummies' : '') + '</h3>';
+  if (easy) h += '<p class="easy-banner">Explicación desde cero, sin suponer nada. Sigue las mismas páginas del libro (indicadas arriba); las comparaciones cotidianas son mías. Si prefieres el texto más técnico, cambia a «Texto del libro» arriba.</p>';
+  h += '<div class="theory">' + (easy ? EASY[t.id] : t.theory) + '</div>';
+  h += '<h3 class="sec">Ejercicios</h3>';
+  t.groups.forEach((g, gi) => {
+    h += '<div class="group-title">' + g.title + '</div>';
+    if (g.intro) h += '<p class="group-intro">' + g.intro + '</p>';
+    h += '<div class="cols"><div class="col l"><h4>Resueltos (' + g.solved.length + ')</h4>';
+    g.solved.forEach((e, i) => {
+      h += '<article class="ex"><div class="ex-q"><span class="ex-n">R' + (i + 1) + '</span><p>' + e.q + '</p></div>' + solHtml(e) + '</article>';
+    });
+    h += '</div><div class="col r"><h4>Por resolver (' + g.todo.length + ')</h4>';
+    g.todo.forEach((e, i) => {
+      const key = t.id + ":" + gi + ":" + i;
+      h += '<article class="ex" id="ex-' + key + '"><div class="ex-q"><span class="ex-n">P' + (i + 1) + '</span><p>' + e.q + '</p></div>' +
+        '<div class="check"><input type="text" id="in-' + key + '" data-key="' + key + '" data-g="' + gi + '" data-i="' + i + '" autocomplete="off" placeholder="Tu respuesta" aria-label="Respuesta al ejercicio P' + (i + 1) + '">' +
+        '<button class="btn" type="button" data-key="' + key + '" data-g="' + gi + '" data-i="' + i + '">Comprobar</button>' +
+        '<div class="verdict" id="vd-' + key + '" aria-live="polite"></div></div>' + solHtml(e) + '</article>';
+    });
+    h += '</div></div>';
+  });
+  const hasFaq = t.faq && t.faq.length;
+  h += '<h3 class="sec">' + (hasFaq ? 'Dudas frecuentes y Python' : 'Python') + '</h3><div class="bottom' + (hasFaq ? '' : ' single') + '">';
+  if (hasFaq) {
+    h += '<div class="col"><h4>Dudas frecuentes</h4>';
+    t.faq.forEach(f => { h += '<details class="faq"><summary>' + f.q + '</summary><div class="a">' + f.a + '</div></details>'; });
+    h += '</div>';
+  }
+  h += '<div class="col"><div class="prose">' + t.py + '</div></div></div></section>';
+  $main.innerHTML = h;
+  const run = (key, gi, i) => {
+    const ex = t.groups[gi].todo[i];
+    const inp = document.getElementById("in-" + key), vd = document.getElementById("vd-" + key), card = document.getElementById("ex-" + key);
+    store.set("ans:" + key, inp.value);
+    const r = check(ex, inp.value);
+    card.classList.remove("is-ok", "is-bad"); vd.className = "verdict";
+    if (r === null) { vd.textContent = ""; store.set("ok:" + key, "0"); }
+    else if (r) { vd.textContent = "✓ Correcto"; vd.classList.add("ok"); card.classList.add("is-ok"); store.set("ok:" + key, "1"); }
+    else { vd.textContent = "✗ No coincide. Revisa y vuelve a probar, o mira la solución."; vd.classList.add("bad"); card.classList.add("is-bad"); store.set("ok:" + key, "0"); }
+    const [ok, all] = totals(t); const bd = document.getElementById("bd-" + t.id); if (bd) bd.textContent = ok + "/" + all;
+  };
+  $main.querySelectorAll('.check input[type="text"]').forEach(inp => {
+    const saved = store.get("ans:" + inp.dataset.key);
+    if (saved) { inp.value = saved; if (store.get("ok:" + inp.dataset.key) === "1") run(inp.dataset.key, +inp.dataset.g, +inp.dataset.i); }
+    inp.addEventListener("keydown", ev => { if (ev.key === "Enter") run(inp.dataset.key, +inp.dataset.g, +inp.dataset.i); });
+  });
+  $main.querySelectorAll(".check .btn").forEach(btn => btn.addEventListener("click", () => run(btn.dataset.key, +btn.dataset.g, +btn.dataset.i)));
+}
+let mode = store.get("mode") === "book" ? "book" : "easy";
+function renderMode() {
+  const el = document.getElementById("mode");
+  el.innerHTML = '<button type="button" data-m="easy" aria-pressed="' + (mode === "easy") + '">Para dummies</button>' +
+    '<button type="button" data-m="book" aria-pressed="' + (mode === "book") + '">Texto del libro</button>';
+  el.querySelectorAll("button").forEach(b => b.addEventListener("click", () => {
+    mode = b.dataset.m; store.set("mode", mode); renderMode();
+    const cur = (location.hash || "").replace("#", ""); go(cur, false);
+  }));
+}
+function go(id, push) {
+  const t = TABS.find(x => x.id === id) || TABS[0];
+  renderTabs(t.id); renderPanel(t);
+  if (push) { try { history.replaceState(null, "", "#" + t.id); } catch (e) { location.hash = t.id; } }
+  window.scrollTo({ top: 0 });
+}
+renderMode();
+go((location.hash || "").replace("#", ""), false);
+window.addEventListener("hashchange", () => go((location.hash || "").replace("#", ""), false));
+</script>
+</body>
+</html>
