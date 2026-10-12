@@ -10,6 +10,7 @@ La carpeta [`fundamentos algebraicos`](fundamentos%20algebraicos/index.html) con
 
 - Esto es **una herramienta para aprender**, hecha por una estudiante con ayuda de una IA.
 - **No está revisada por el profesorado** de la UNED y **no es material oficial**.
-- Puede contener errores. **Revisa siempre su contenido** con el texto base de la asignatura y con tu equipo docente (foros del curso virtual, tutoría) **antes de dar nada por supuesto**.
+- Se ha usado como base el material de la asignatura (el texto base y la guía complementaria), **pero puede contener errores**, tanto del material como de la propia web.
+- **Revisa siempre su contenido** con el texto base de la asignatura y con tu equipo docente (foros del curso virtual, tutoría) **antes de dar nada por supuesto**.
 - Las erratas del texto base que se señalan en la web están pendientes de confirmación por el profesorado.
 - No sustituye al texto base ni a las indicaciones del equipo docente. No contiene soluciones de PEC ni de prácticas evaluables.
