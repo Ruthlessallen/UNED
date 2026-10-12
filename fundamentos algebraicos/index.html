@@ -85,6 +85,12 @@
   .theory ul, .theory ol, .prose ul, .prose ol { padding-left: 1.3rem; margin: 0 0 12px; }
   .theory li, .prose li { margin-bottom: 4px; break-inside: avoid; }
   .theory p, .theory .def, .theory .note, .theory .tblwrap, .theory pre { break-inside: avoid; }
+  header.top p.aviso {
+    margin-top: 12px; padding: 10px 14px; border: 1px solid var(--warn); background: var(--warn-soft);
+    color: var(--ink); border-radius: 8px; font-size: 0.875rem;
+  }
+  header.top p.aviso b:first-child { color: var(--warn); }
+  .foot { border-top: 1px solid var(--line); padding-top: 16px; color: var(--muted); font-size: 0.85rem; max-width: 60rem; }
   .tip { background: var(--accent-soft); border-radius: 8px; padding: 12px 16px; margin: 12px 0 16px; break-inside: avoid; }
   .tip p:last-child { margin-bottom: 0; }
   .mode { display: inline-flex; margin-top: 10px; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
@@ -165,10 +171,12 @@
     <p>Fundamentos Algebraicos para la IA · UNED 26-27 · cód. 71031027</p>
     <h1>Tema I · Escalares</h1>
     <p>Una pestaña por apartado del texto base (pp. 15–53). Cada una tiene explicación con fuente, ejercicios resueltos (izquierda) y por resolver (derecha), y dudas frecuentes con Python al final. La pestaña 0 repasa lo que el libro da por sabido.</p>
+    <p class="aviso"><b>Aviso.</b> Esto es una herramienta para aprender hecha por una estudiante con ayuda de una IA. <b>No está revisada por el profesorado</b> ni es material oficial de la UNED, y puede contener errores. Revisa siempre lo que leas aquí con el texto base y con tu equipo docente antes de dar nada por supuesto.</p>
     <div class="mode" id="mode" role="group" aria-label="Nivel de la explicación"></div>
   </header>
   <div class="bar"><div class="tabs" role="tablist" id="tabs" aria-label="Apartados del Tema I"></div></div>
   <main id="main"></main>
+  <footer class="foot">Herramienta de estudio no revisada por el profesorado de la UNED. Contrasta todo con el texto base y con tu equipo docente. Las erratas señaladas del libro están pendientes de su confirmación.</footer>
 </div>
 
 <script>
