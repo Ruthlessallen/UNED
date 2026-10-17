@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Cuaderno Tema I</title>
+<title>Cuaderno de álgebra</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap">
 <style>
@@ -169,8 +169,8 @@
 <div class="wrap">
   <header class="top">
     <p>Fundamentos Algebraicos para la IA · UNED 26-27 · cód. 71031027</p>
-    <h1>Tema I · Escalares</h1>
-    <p>Una pestaña por apartado del texto base (pp. 15–53). Cada una tiene explicación con fuente, ejercicios resueltos (izquierda) y por resolver (derecha), y dudas frecuentes con Python al final. La pestaña 0 repasa lo que el libro da por sabido.</p>
+    <h1>Cuaderno de álgebra · Temas I y II</h1>
+    <p>Una pestaña por apartado del texto base: Tema I (pp. 15–53) y el apartado 1 del Tema II (pp. 55–63). Cada una tiene explicación con fuente, ejercicios resueltos (izquierda) y por resolver (derecha), y dudas frecuentes con Python al final. La pestaña 0 repasa lo que el libro da por sabido.</p>
     <p class="aviso"><b>Aviso.</b> Esto es una herramienta para aprender hecha por una estudiante con ayuda de una IA. <b>No está revisada por el profesorado</b> ni es una web oficial de la UNED. Se ha usado como base el material oficial de la asignatura (el texto base y la guía complementaria), <b>pero esta web puede contener errores</b>. Revisa siempre lo que leas aquí con el texto base y con tu equipo docente antes de dar nada por supuesto.</p>
     <div class="mode" id="mode" role="group" aria-label="Nivel de la explicación"></div>
   </header>
@@ -1002,6 +1002,123 @@ cmath.polar(1 + 1j)          # (1.414..., 0.785...)  módulo y argumento en radi
 cmath.exp(1j * cmath.pi)     # ≈ -1  (identidad de Euler)</code></pre>`
 });
 
+/* ================= TEMA II · 1 · ESPACIO LINEAL K^I ================= */
+TABS.push({
+  id: "espacio", num: "II.1", name: "Espacio lineal K^I", pg: "pp. 55–63",
+  src: "<b>Fuente:</b> Tema II, apartado 1 (1.1 a 1.4), pp. 55–63 (Ejemplos 45 a 53). Ejercicios propios. <b>Posibles erratas</b> (comprobadas en el PDF): en el Ejemplo 50 (p. 60) escribe «e₁, e₂, e₂» y «B = {e₁, e₂, e₂}» y debería ser e₃; y en p. 62 «ejemplos 51 y 51» debería ser «51 y 52». Pendientes de tu visto bueno.",
+  theory: `
+    <div class="def"><p><b>K^I</b> es el conjunto de todas las familias u : I → K, con I un conjunto de índices y K el cuerpo de escalares, <b>K = ℝ o K = ℂ</b> (p. 55). Si I = {1, 2} y K = ℝ, es ℝ², con u = (u₁, u₂).</p></div>
+    <h4>1.2 Combinaciones lineales</h4>
+    <p>Las operaciones se hacen <b>componente a componente</b>: w = αu + βv significa wᵢ = α·uᵢ + β·vᵢ para cada i ∈ I. Ejemplo 45: α = 4, β = 2, u = (3, −5), v = (6, 8) da w = (24, −4). La expresión αu + βv es una <b>combinación lineal</b> de u y v con pesos α y β; con todos los pesos 0 es la <b>trivial</b>. Con estas operaciones, K^I es un <b>espacio lineal</b> (el libro evita "espacio vectorial" hasta definir "vector").</p>
+    <p>Notación: los escalares con letras griegas minúsculas; los elementos de K^I con letras latinas, a menudo en negrita (p. 56). Con I = ℕ se usa k como índice para no confundirlo con la unidad imaginaria.</p>
+    <h4>Subespacios, generado, dependencia y base (pp. 57–58)</h4>
+    <ul>
+      <li><b>Subespacio lineal</b> V ⊆ K^I: αu + βv ∈ V para todo u, v ∈ V y α, β ∈ K. Siempre contiene el elemento cero 0 (la familia con todas las componentes 0). En ℝ²: el origen, las rectas por el origen y todo el plano (Ejemplo 48).</li>
+      <li><b>Subespacio afín</b>: B tal que B − b es subespacio lineal para algún b ∈ B (en ℝ², puntos y rectas cualesquiera).</li>
+      <li><b>Subespacio generado</b> ⟨B⟩: todas las combinaciones lineales de elementos de B.</li>
+      <li><b>Linealmente dependiente</b>: existe una combinación lineal <b>no trivial</b> que da el cero. <b>Independiente</b>: no existe. Un conjunto independiente que genera ⟨B⟩ es una <b>base</b>.</li>
+      <li>Aviso: dependiente significa que <b>alguno</b> se expresa con los demás, no que cualquiera pueda (p. 58).</li>
+    </ul>
+    <h4>Elementos básicos y base canónica (pp. 58–60)</h4>
+    <p>eⱼ ∈ K^I vale 1 en el índice j y 0 en los demás ((eⱼ)ᵢ = δᵢⱼ, la delta de Kronecker). Cualquier u se escribe u = Σ uⱼeⱼ. Si I es finito, {eⱼ} es una base (la <b>canónica</b>) de K^I. Si I es infinito (I = ℕ, ℝ), las eⱼ no generan todo K^I (Ejemplos 51 y 52). Aplicación a IA: la codificación <i>one-hot</i> de palabras o categorías.</p>
+    <h4>1.3 Teorema de la base (pp. 61–62)</h4>
+    <p>Si B es independiente con n elementos y A ⊆ ⟨B⟩: (i) si A tiene más de n elementos, es dependiente; (ii) si A es independiente con n elementos, ⟨A⟩ = ⟨B⟩; (iii) todas las bases de ⟨B⟩ tienen n elementos. Ese número es la <b>dimensión</b> dim. Con I de n elementos, dim K^I = n. La <b>suma</b> U + V es el subespacio generado por U ∪ V; es <b>suma directa</b> U ⊕ V si U ∩ V = {0}. El producto de Hadamard (componente a componente) es una curiosidad en álgebra lineal pero importante en IA.</p>
+    <h4>1.4 Espacios vectoriales "abstractos" (p. 63)</h4>
+    <p>Las propiedades (EV1)–(EV8) (asociativa, conmutativa, elemento neutro, opuesto, distributivas, 1·u = u) son evidentes en K^I. Un conjunto con dos operaciones que las cumplan es un espacio vectorial abstracto; en esta asignatura solo se trabaja con los de tipo K^I.</p>`,
+  faq: [
+    { q: "¿Cómo se buscan los pesos de una combinación?", a: "<p>Se ponen como incógnitas (α, β…), se multiplica cada peso por las componentes de su elemento y se suma componente a componente: queda una ecuación por componente. Si salen la misma ecuación repetida, hay libertad (eliges un peso ≠ 0 y despejas el otro): dependiente. Si solo sale α = β = 0, independiente.</p>" },
+    { q: "¿Qué es t en «los puntos (t, 2t)»?", a: "<p>Un número cualquiera: cada valor de t da un punto. Para ver si (0, 0) está en el conjunto no se prueban valores: se busca el t que haga las dos componentes 0 a la vez. En (t, 2t) vale t = 0 y sí está; en (t, t + 1) haría falta t = 0 y t = −1: no está.</p>" },
+    { q: "Si la ecuación es 2t = 0, ¿t = −2 o t = 0?", a: "<p>t = 0: el 2 multiplica, así que se divide (la operación inversa). Con 2 + t = 0 (el 2 sumando) sí sale t = −2.</p>" },
+    { q: "¿Por qué (3, 3) pertenece a ⟨(1, 1)⟩?", a: "<p>Porque (3, 3) = 3·(1, 1): existe un peso (α = 3) que cumple las dos componentes a la vez. Si las ecuaciones se contradijeran (α = 2 y α = 5), no pertenecería.</p>" }
+  ],
+  groups: [
+    {
+      title: "A · K^I y combinaciones lineales",
+      intro: "Escribe los elementos de K^I como lista de componentes separadas por comas (por ejemplo 24,-4).",
+      solved: [
+        E("I = {1, 2}, K = ℝ, α = 4, β = 2, u = (3, −5), v = (6, 8). Calcula w = αu + βv. (Ejemplo 45)", ["w₁ = 4·3 + 2·6 = 12 + 12 = 24.", "w₂ = 4·(−5) + 2·8 = −20 + 16 = −4."], "(24, −4)"),
+        E("Con α = 2, β = 3, u = (1, −2), v = (4, 0): calcula w = αu + βv.", ["w₁ = 2·1 + 3·4 = 14.", "w₂ = 2·(−2) + 3·0 = −4."], "(14, −4)"),
+        E("Calcula u − v con u = (5, −1) y v = (2, 3). (Es 1·u + (−1)·v)", ["Componente a componente: 5 − 2 = 3 y −1 − 3 = −4."], "(3, −4)"),
+        E("¿Cuántas componentes tiene cada elemento de ℝ^I si I = {1, 2, 3, 4}?", ["Una por cada índice: son las cuaternas (u₁, u₂, u₃, u₄)."], "4"),
+        E("I = ℕ, u_k = k², v_k = k. Si w = 2u − 5v, ¿cuánto vale w₃? (Ejemplo 46)", ["w_k = 2k² − 5k.", "w₃ = 2·9 − 5·3 = 18 − 15."], "3"),
+        E("Con u = (3, 4) y v = (1, 2), calcula 0·u + 0·v.", ["Todos los pesos 0: combinación trivial.", "Da el elemento cero."], "(0, 0)")
+      ],
+      todo: [
+        T("Con α = 3, β = −2, u = (2, 5), v = (−1, 3): calcula w = αu + βv.", "seq", "8,9", ["w₁ = 3·2 + (−2)(−1) = 6 + 2 = 8.", "w₂ = 3·5 + (−2)·3 = 15 − 6 = 9."], "(8, 9)"),
+        T("Calcula u − v con u = (7, 2, −1) y v = (4, −3, 5).", "seq", "3,5,-6", ["7 − 4 = 3; 2 − (−3) = 5; −1 − 5 = −6."], "(3, 5, −6)"),
+        T("Con α = 2, β = 3, u = (1, 0, 2), v = (0, 4, −1): calcula αu + βv.", "seq", "2,12,1", ["2u = (2, 0, 4); 3v = (0, 12, −3).", "Suma: (2, 12, 1)."], "(2, 12, 1)"),
+        T("I = {a, b, c}, u = (1, 2, 3) y v = (3, 2, 1) en el orden (a, b, c). Calcula u + v.", "seq", "4,4,4", ["1 + 3 = 4; 2 + 2 = 4; 3 + 1 = 4."], "(4, 4, 4)"),
+        T("I = ℕ, u_k = k, v_k = 1. Si w = 3u + 2v, ¿cuánto vale w₄?", "num", "14", ["w_k = 3k + 2.", "w₄ = 12 + 2."], "14"),
+        T("K = ℂ, I = {1, 2}, u = (1 + i, 2) y α = i. ¿Cuánto vale la primera componente de αu?", "cx", "-1+i", ["i · (1 + i) = i + i².", "i² = −1."], "−1 + i")
+      ]
+    },
+    {
+      title: "B · Subespacios, dependencia lineal y base",
+      intro: "Respuestas V o F. Método: una ecuación por componente, pesos α y β como incógnitas.",
+      solved: [
+        E("¿Es {(1, 0), (2, 0)} linealmente dependiente?", ["α(1, 0) + β(2, 0) = (α + 2β, 0) = (0, 0).", "Solo hay que cumplir α + 2β = 0: α = 2, β = −1 es no trivial."], "V"),
+        E("¿Es {(1, 0), (0, 1)} linealmente independiente?", ["α(1, 0) + β(0, 1) = (α, β) = (0, 0).", "Solo α = β = 0."], "V"),
+        E("¿Es {(1, 1), (2, 2)} linealmente dependiente?", ["α + 2β = 0 en las dos componentes (la misma ecuación).", "Elige β = 1: α = −2."], "V"),
+        E("¿Es {(1, 1), (1, −1)} linealmente independiente?", ["α + β = 0 y α − β = 0.", "Al sumar: 2α = 0, luego α = 0 y β = 0."], "V"),
+        E("¿Pertenece (3, 6) al subespacio generado por {(1, 2)}?", ["α(1, 2) = (α, 2α) = (3, 6).", "α = 3 cumple las dos componentes."], "V"),
+        E("¿Es subespacio lineal de ℝ² el conjunto de puntos (t, 2t + 3)?", ["Debería contener (0, 0): t = 0 y 2t + 3 = 0 (t = −3/2) no coinciden.", "El (0, 0) no está."], "F")
+      ],
+      todo: [
+        T("¿Es {(1, 2), (2, 4)} linealmente dependiente?", "vf", "V", ["α + 2β = 0 y 2α + 4β = 0: la segunda es el doble de la primera.", "β = 1, α = −2."], "V"),
+        T("¿Es {(1, 2), (2, 3)} linealmente independiente?", "vf", "V", ["α + 2β = 0 y 2α + 3β = 0.", "De la primera α = −2β; en la segunda: −4β + 3β = −β = 0, luego β = 0 y α = 0."], "V"),
+        T("¿Pertenece (3, 5) al subespacio generado por {(1, 2)}?", "vf", "F", ["α = 3 y 2α = 5 se contradicen."], "F"),
+        T("¿Es subespacio lineal de ℝ² el conjunto de puntos (t, t + 1)?", "vf", "F", ["Para (0, 0) harían falta t = 0 y t = −1."], "F"),
+        T("¿Es subespacio lineal de ℝ² el conjunto de puntos (t, 2t)?", "vf", "V", ["Contiene (0, 0) y es una recta por el origen: las combinaciones siguen en la forma (r, 2r)."], "V"),
+        T("¿Es {(1, 0), (0, 1), (1, 1)} linealmente dependiente?", "vf", "V", ["(1, 0) + (0, 1) − (1, 1) = (0, 0): pesos 1, 1, −1 no triviales."], "V")
+      ]
+    },
+    {
+      title: "C · Elementos básicos, base canónica y dimensión",
+      intro: "Escribe los elementos como componentes separadas por comas, por ejemplo 0,1,0.",
+      solved: [
+        E("Escribe e₂ para I = {1, 2, 3, 4}.", ["Un 1 en el casillero 2 y ceros en los demás."], "(0, 1, 0, 0)"),
+        E("Escribe (4, −1, 0) como combinación de e₁, e₂ y e₃. Responde los tres pesos.", ["Los pesos son las propias componentes."], "4, −1, 0"),
+        E("Con one-hot en un vocabulario de 4 palabras, ¿cómo se codifica la palabra número 2?", ["Es e₂ de I = {1, 2, 3, 4}."], "(0, 1, 0, 0)"),
+        E("¿Cuál es la dimensión de ℝ^I si I = {1, 2, 3, 4, 5}?", ["dim K^I = número de elementos de I."], "5"),
+        E("Con I = ℕ, ¿generan los eⱼ todo K^ℕ? (V/F)", ["La familia (1, 1, 1, …) no es combinación de un número finito de eⱼ (Ejemplo 51)."], "F"),
+        E("¿Puede ser linealmente independiente un conjunto de 3 elementos de ℝ²? (V/F)", ["ℝ² tiene una base de 2 elementos.", "Teorema de la base (i): más de 2 elementos ⇒ dependiente."], "F")
+      ],
+      todo: [
+        T("Escribe e₃ para I = {1, 2, 3}.", "seq", "0,0,1", ["Un 1 en el casillero 3."], "(0, 0, 1)"),
+        T("Escribe (5, −2, 7) como combinación de e₁, e₂, e₃. Responde los tres pesos.", "seq", "5,-2,7", ["Los pesos son las componentes."], "5, −2, 7"),
+        T("Con one-hot en un vocabulario de 6 palabras, ¿cómo se codifica la palabra número 4?", "seq", "0,0,0,1,0,0", ["Es e₄ con I = {1, …, 6}."], "(0, 0, 0, 1, 0, 0)"),
+        T("¿Cuál es la dimensión de ℝ^I si I = {a, b, c}?", "num", "3", ["Tres índices, dimensión 3."], "3"),
+        T("¿Es {e₁, e₂} una base de ℝ³? (V/F)", "vf", "F", ["Es independiente pero no genera ℝ³ (falta e₃)."], "F"),
+        T("¿Cuánto vale (e₃)₂, es decir, la componente 2 del elemento básico e₃?", "num", "0", ["(eⱼ)ᵢ = 1 solo si i = j; aquí i = 2 y j = 3."], "0")
+      ]
+    }
+  ],
+  py: `
+    <h4>K^I en Python</h4>
+<pre><code>u = [3, -5]
+v = [6, 8]
+w = [4*a + 2*b for a, b in zip(u, v)]    # componente a componente
+print(w)                                  # [24, -4]</code></pre>
+    <p>Con la biblioteca NumPy los vectores operan solos (el libro lo menciona en la p. 67):</p>
+<pre><code>import numpy as np
+u = np.array([3, -5]); v = np.array([6, 8])
+print(4*u + 2*v)           # [24 -4]
+print(np.array([1, 2]) + np.array([3, 4]))   # [4 6]   (suma de vectores)
+print([1, 2] + [3, 4])     # [1, 2, 3, 4]   ¡las listas "pegan"!</code></pre>
+    <h4>Dependencia lineal: ¿hay pesos no triviales?</h4>
+<pre><code>import numpy as np
+A = np.array([[1, 2], [2, 4]])        # cada fila es un elemento: (1,2) y (2,4)
+print(np.linalg.matrix_rank(A))        # 1  → menos que 2 filas: dependientes
+B = np.array([[1, 1], [1, -1]])
+print(np.linalg.matrix_rank(B))        # 2  → independientes</code></pre>
+    <p>El rango es el máximo número de filas independientes (se verá más adelante en el temario).</p>
+    <h4>One-hot</h4>
+<pre><code>vocab = ["gato", "perro", "casa", "sol"]
+def one_hot(palabra):
+    return [1 if p == palabra else 0 for p in vocab]
+print(one_hot("perro"))   # [0, 1, 0, 0]  → es e_2</code></pre>`
+});
+
 /* ================= VERSIÓN PARA DUMMIES ================= */
 const EASY = {};
 
@@ -1343,6 +1460,55 @@ EASY.complejos = `
   </ul>
   <p>Ejemplo: x² + 2x + 5 = 0. Discriminante: 4 − 20 = −16. Raíz: 4i. x = (−2 ± 4i)/2 = −1 ± 2i.</p>
   <p>El <b>Teorema Fundamental del Álgebra</b> (p. 53) dice que todo polinomio no constante tiene al menos una raíz compleja, y que uno de grado n tiene exactamente n raíces contando repeticiones. Por eso los complejos son tan útiles más adelante, para descomponer polinomios y para diagonalizar matrices.</p>`;
+
+EASY.espacio = `
+  <h4>Qué es K^I (sin asustarse)</h4>
+  <p>K^I es el conjunto de <b>todas las listas con etiquetas</b> u : I → K (familias del apartado 1.5 del Tema I), donde las etiquetas están en I y los valores son escalares de K (K es ℝ o ℂ, p. 55). Es solo un nombre cómodo para "todas las listas posibles de ese tamaño".</p>
+  <div class="tblwrap"><table>
+    <tr><th>I (etiquetas)</th><th>K^I (con K = ℝ)</th><th>Cómo se ve</th></tr>
+    <tr><td class="m">{1, 2}</td><td>ℝ²</td><td>pares (u₁, u₂), como (3, −5)</td></tr>
+    <tr><td class="m">{1, 2, 3}</td><td>ℝ³</td><td>ternas (u₁, u₂, u₃)</td></tr>
+    <tr><td class="m">{a, b}</td><td>ℝ^{a,b}</td><td>(u_a, u_b), con etiquetas en vez de posiciones</td></tr>
+    <tr><td class="m">ℕ</td><td>ℝ^ℕ</td><td>sucesiones u₀, u₁, u₂… sin fin</td></tr>
+  </table></div>
+  <p>El libro advierte que la abstracción simplifica: se quitan los rasgos que no importan. Ahora lo concreto es ℝ²: la hoja de papel infinita con el origen (0, 0) marcado.</p>
+  <h4>Operar: casillero por casillero</h4>
+  <p>Para sumar dos listas o multiplicar una lista por un número, se hace <b>posición por posición</b>. w = αu + βv significa: en cada casillero i, wᵢ = α·uᵢ + β·vᵢ. Los números α y β se llaman <b>pesos</b>.</p>
+  <p><b>Ejemplo 45 del libro.</b> α = 4, β = 2, u = (3, −5), v = (6, 8):</p>
+  <ul>
+    <li>Casillero 1: 4·3 + 2·6 = 12 + 12 = <b>24</b>.</li>
+    <li>Casillero 2: 4·(−5) + 2·8 = −20 + 16 = <b>−4</b>.</li>
+    <li>w = (24, −4).</li>
+  </ul>
+  <p>Restar es lo mismo con β = −1: u − v = 1·u + (−1)·v, casillero por casillero.</p>
+  <p>A la expresión αu + βv se le llama <b>combinación lineal</b> (se pueden combinar más de dos). Si todos los pesos son 0, es la <b>trivial</b> y da el elemento cero (todas las componentes 0). Todo esto es "estructura de espacio lineal" (el libro evita llamarlo "espacio vectorial" todavía).</p>
+  <h4>Subespacio: una zona que no se escapa</h4>
+  <p>Un subconjunto V es un <b>subespacio lineal</b> si, al combinar elementos de V, el resultado <b>sigue en V</b> (la idea de "cerrado" del Tema I). Consecuencia directa: tiene que contener el elemento cero (con pesos 0).</p>
+  <p>En el plano ℝ², los subespacios son: solo el origen, todas las rectas que pasan por el origen, y todo el plano (Ejemplo 48).</p>
+  <div class="tip"><p><b>Test rápido:</b> ¿contiene el (0, 0)? Si no, no es subespacio. Una recta que no pasa por el origen es un "subespacio afín", no lineal.</p></div>
+  <p><b>Qué es t en «los puntos (t, 2t + 3)»:</b> un número cualquiera. Cada valor de t da un punto (t = 0 → (0, 3); t = 1 → (1, 5)). Para saber si el (0, 0) está, no pruebas valores al azar: buscas el t que haga las dos componentes 0 a la vez. Aquí t = 0 y 2t + 3 = 0 (t = −3/2) no coinciden, así que no está.</p>
+  <h4>Subespacio generado</h4>
+  <p>⟨B⟩ es el conjunto de <b>todas las combinaciones lineales</b> de los elementos de B. Con B = {(1, 2)}: son todos los (α, 2α), una recta por el origen. Para saber si un punto está, buscas un peso que cumpla todas las componentes: (3, 6) sí (α = 3); (3, 5) no (α = 3 y 2α = 5 se contradicen).</p>
+  <h4>Dependiente o independiente: ¿se anulan entre sí?</h4>
+  <p>Pregunta: ¿puedo multiplicar cada elemento por un peso, <b>no todos 0</b>, de modo que la suma dé el elemento cero? Los pesos no los da el conjunto: <b>son las incógnitas</b>.</p>
+  <ol>
+    <li>Pon un peso delante de cada elemento y que la suma sea (0, 0): α(1, 2) + β(2, 4) = (0, 0).</li>
+    <li>Haz las cuentas casillero a casillero: (α + 2β, 2α + 4β) = (0, 0).</li>
+    <li>Cada casillero es una ecuación: α + 2β = 0 y 2α + 4β = 0. <b>No las sumes entre sí.</b></li>
+    <li>¿Son la misma ecuación disfrazada? Aquí la segunda es el doble de la primera: hay libertad. Eliges β = 1 (≠ 0) y despejas α = −2. Hay pesos no triviales: <b>dependiente</b>.</li>
+    <li>Si las ecuaciones son distintas, se resuelven; si solo sale α = β = 0: <b>independiente</b>. Ejemplo: {(1, 1), (1, −1)} da α + β = 0 y α − β = 0; al sumarlas, 2α = 0.</li>
+  </ol>
+  <p>Truco: si un elemento es múltiplo de otro ((2, 4) = 2·(1, 2)), es dependiente. Un conjunto independiente que genera un subespacio es una <b>base</b> de él. El aviso del libro (p. 58): "dependiente" significa que <b>alguno</b> se expresa con los demás, no que cualquiera pueda.</p>
+  <h4>Los elementos básicos eⱼ: la lista del "solo uno"</h4>
+  <p>eⱼ es la lista con un <b>1 en el casillero j y 0 en todos los demás</b>. Con I = {1, 2, 3}: e₁ = (1, 0, 0), e₂ = (0, 1, 0), e₃ = (0, 0, 1). (Se llama delta de Kronecker: (eⱼ)ᵢ vale 1 si i = j y 0 si no.)</p>
+  <p>Cualquier lista se escribe con ellos, con las propias componentes como pesos: (5, −2, 7) = 5e₁ − 2e₂ + 7e₃. Si I es finito, {eⱼ} es una base (la <b>canónica</b>). En IA es el <b>one-hot</b>: en un vocabulario de 5 palabras, la palabra número 3 se codifica como e₃ = (0, 0, 1, 0, 0).</p>
+  <p>Con I infinito (como ℕ), los eⱼ no bastan para generar todo K^I (Ejemplo 51: la sucesión (1, 1, 1, …) no es combinación de un número finito de ellos).</p>
+  <div class="note"><strong>Errata del libro (p. 60):</strong> el Ejemplo 50 escribe «e₁, e₂, e₂» y «B = {e₁, e₂, e₂}»; debería ser e₃.</div>
+  <h4>Dimensión y teorema de la base (1.3, pp. 61–62)</h4>
+  <p>Una base puede cambiar, pero <b>todas las bases de un subespacio tienen el mismo número de elementos</b>: ese número es su <b>dimensión</b>. Si I tiene n elementos, dim K^I = n (ℝ² tiene dimensión 2; ℝ^{1,2,3,4}, dimensión 4). Consecuencia: en ℝ², tres elementos siempre son dependientes (más elementos que la dimensión).</p>
+  <p>La <b>suma</b> de subespacios U + V es lo que generan juntos. Es suma <b>directa</b> (U ⊕ V) si solo comparten el cero.</p>
+  <h4>1.4: lo "abstracto" (p. 63)</h4>
+  <p>Las propiedades (EV1)–(EV8) (por ejemplo u + v = v + u y 1·u = u) son tan evidentes en K^I que se cumplen sin esfuerzo. Los manuales abstractos las toman como definición de "espacio vectorial". En esta asignatura solo se trabaja con los de tipo K^I, así que no hace falta más.</p>`;
 
 /* ----- Pestaña 0: lo que el libro da por sabido ----- */
 TABS.unshift({
