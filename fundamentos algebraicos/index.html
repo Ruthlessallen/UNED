@@ -1250,8 +1250,8 @@ print(v.shape, v.reshape(3, 1).shape, v.reshape(1, 3).shape)   # (3,) (3,1) (1,3
 
 /* ================= TEMA II · 3 · OPERACIONES CON TENSORES (3.1-3.2) ================= */
 TABS.push({
-  id: "operaciones", num: "II.3", name: "Combinaciones y producto de matrices", pg: "pp. 83–87",
-  src: "<b>Fuente:</b> Tema II, apartado 3 (3.1 y 3.2), pp. 83–87 (Ejemplos 66 a 73). Ejercicios propios. Sin tratar todavía: 3.3 Contracción de índices, 3.4 Multiplicación por bloques y 3.5 Propiedades (pp. 87–94). El Ejemplo 67 (matrices 3×2) salía ilegible en el texto convertido y no se reproduce aquí.",
+  id: "operaciones", num: "II.3", name: "Combinaciones, producto y contracción", pg: "pp. 83–89",
+  src: "<b>Fuente:</b> Tema II, apartado 3 (3.1, 3.2 y 3.3), pp. 83–89 (Ejemplos 66 a 74 y 76 a 79). Ejercicios propios. Sin tratar todavía: Ejemplo 75 (producto vectorial), 3.4 Multiplicación por bloques y 3.5 Propiedades (pp. 90–94). El Ejemplo 67 (matrices 3×2) salía ilegible en el texto convertido y no se reproduce aquí.",
   theory: `
     <h4>3.1 Combinaciones lineales de tensores (p. 83)</h4>
     <p>Los tensores de un mismo formato forman un espacio lineal: se pueden <b>sumar</b> y <b>multiplicar por un escalar</b> componente a componente, igual que en K^I. Solo se pueden sumar tensores del <b>mismo formato</b>. Una combinación lineal αA + βB se calcula multiplicando cada tensor por su peso y sumando después. Ejemplo 66: α = −2, β = 1, u = (1, 0, 0, 3), v = (3, 1, 1, 0) da αu + βv = (1, 1, 1, −6). El Ejemplo 68 hace lo mismo con tensores de formato 2 × 2 × 3 en corchetes anidados.</p>
@@ -1262,13 +1262,19 @@ TABS.push({
       <li>El orden importa: en general AB ≠ BA, y a veces solo existe una de las dos (Ejemplos 70 y 72).</li>
       <li>Matrices de permutación (Ejemplo 73, p. 86): P·A reordena las <b>filas</b> de A igual que P reordena las filas de la identidad.</li>
       <li>Columnas y componentes (p. 87): A·eⱼ es la columna j de A, y eᵢᵀ·A es la fila i. Así, aᵢⱼ = eᵢᵀ A eⱼ.</li>
-    </ul>`,
+    </ul>
+    <h4>3.3 Contracción de índices (pp. 87–89)</h4>
+    <p>Para contraer dos tensores A (p ejes) y B (q ejes) hace falta un eje i de A y un eje j de B <b>del mismo tamaño</b>. Cada componente del eje i de A se multiplica por su homóloga del eje j de B y se suman los productos. Los dos ejes desaparecen y el resultado Cᵢ,ⱼ(A, B) hereda, en orden, los ejes restantes de A seguidos de los de B: tiene <b>p + q − 2</b> ejes. El producto de matrices es el caso p = q = 2: AB = C₂,₁(A, B), con cᵢⱼ = Σₛ aᵢₛ bₛⱼ.</p>
+    <p>Ejemplo 74: A ∈ R^(2×2×2) y v = (1, 2) dan C₃,₁(A, v) = [[5,11],[17,23]] y C₂,₁(A, v) = [[7,10],[19,22]]. La función einsum de NumPy expresa cualquier contracción (Ejemplos 76 a 79): np.einsum('ik,kj->ij', A, B) es el producto de matrices.</p>`,
   faq: [
     { q: "¿Cómo sé si puedo multiplicar dos matrices?", a: "<p>Escribe los formatos juntos: (n×<b>k</b>)(<b>k</b>×m). Los dos números de en medio tienen que ser iguales. Desaparecen y el resultado es n×m.</p>" },
     { q: "¿Por qué [[4],[5],[6]] tiene 3 filas y no 3 columnas?", a: "<p>Cada corchete interior es una fila. Aquí hay tres corchetes interiores de un elemento cada uno: formato 3×1.</p>" },
     { q: "¿Qué hace la identidad al multiplicar?", a: "<p>Nada: I·A = A·I = A. Es el «1» de las matrices, y uno de los pocos casos en los que el orden no importa.</p>" },
     { q: "¿Fila por columna da un número y columna por fila una matriz?", a: "<p>Sí. (1×3)(3×1) da 1×1, un solo número. (3×1)(1×3) da 3×3, una matriz entera.</p>" },
-    { q: "¿Por qué no sirve A * B en Python?", a: "<p>En NumPy, * multiplica casilla a casilla, que no es el producto de matrices. Para este se usa A @ B.</p>" }
+    { q: "¿Por qué no sirve A * B en Python?", a: "<p>En NumPy, * multiplica casilla a casilla, que no es el producto de matrices. Para este se usa A @ B.</p>" },
+    { q: "¿Qué significa contraer un eje?", a: "<p>Elegir un eje de cada tensor con el mismo tamaño, multiplicar las parejas y sumar. Esos dos ejes desaparecen del resultado.</p>" },
+    { q: "¿Cómo averiguo el formato del resultado sin calcular?", a: "<p>Escribe los dos formatos en fila y tacha los dos números contraídos. Por ejemplo (2×3×<b>4</b>)(<b>4</b>×5) da 2×3×5.</p>" },
+    { q: "¿Qué es el «eje 2» de una matriz?", a: "<p>El segundo índice, j, el que recorre las columnas dentro de cada fila. Contraer el eje 2 es sumar sobre j en cada fila; el eje 1 (filas) se conserva.</p>" }
   ],
   groups: [
     {
@@ -1311,6 +1317,26 @@ TABS.push({
         T("Con P = [[0,1],[1,0]] y A = [[5,6],[7,8]], calcula AP. Responde fila a fila.", "seq", "6,5,8,7", ["AP intercambia las columnas de A."], "[[6,5],[8,7]]"),
         T("¿Es siempre AB = BA? (V/F)", "vf", "F", ["Contraejemplo en los ejercicios resueltos de esta pestaña."], "F")
       ]
+    },
+    {
+      title: "C · Contracción de índices",
+      intro: "Escribe los formatos en fila y tacha los dos tamaños iguales que contraes. Resultados en vectores: con comas (por ejemplo 2,6).",
+      solved: [
+        E("Ejemplo 74. A = [[[1,2],[3,4]],[[5,6],[7,8]]] ∈ R^(2×2×2) y v = (1, 2). Calcula C₃,₁(A, v).", ["Se suma sobre el eje 3 de A (el último índice): cᵣₛ = aᵣₛ₁·1 + aᵣₛ₂·2.", "c₁₁ = 1+4 = 5; c₁₂ = 3+8 = 11; c₂₁ = 5+12 = 17; c₂₂ = 7+16 = 23."], "[[5,11],[17,23]]"),
+        E("Ejemplo 74 (cont.). Con los mismos A y v, calcula C₂,₁(A, v).", ["Ahora se suma sobre el eje 2 de A (el índice central): dᵣₛ = aᵣ₁ₛ·1 + aᵣ₂ₛ·2.", "d₁₁ = 1+6 = 7; d₁₂ = 2+8 = 10; d₂₁ = 5+14 = 19; d₂₂ = 6+16 = 22."], "[[7,10],[19,22]]"),
+        E("¿Cuántos ejes tiene C(A, B) si A tiene p = 3 ejes y B tiene q = 2?", ["Se pierden 2 ejes (uno de cada tensor): p + q − 2."], "3"),
+        E("Una matriz 3×4 y un vector de 4 componentes. ¿Qué formato tiene la contracción del eje 2 de la matriz con el vector?", ["(3 × 4) y (4): tachas los 4.", "Queda el 3."], "3 (un vector)"),
+        E("Con A = [[1,2,3],[4,5,6]] y v = (1, 0, 2), calcula C₂,₁(A, v).", ["Fila 1: 1·1 + 2·0 + 3·2 = 7.", "Fila 2: 4·1 + 5·0 + 6·2 = 16."], "(7, 16)")
+      ],
+      todo: [
+        T("Se contrae el eje 2 de una matriz 3×4 con un vector de 4 componentes. ¿Qué formato tiene el resultado?", "seq", "3", ["Tachas el 4 de la matriz y el 4 del vector."], "3"),
+        T("Se contrae el eje 3 de un tensor 2×3×4 con el eje 1 de una matriz 4×5. ¿Qué formato tiene el resultado? Tamaños separados por comas.", "seq", "2,3,5", ["Quedan los ejes de A (2, 3) y después los de B (5)."], "2 × 3 × 5"),
+        T("Calcula C₂,₁(A, v) con A = [[1,2],[3,4]] y v = (2, 0). Responde con comas.", "seq", "2,6", ["Fila 1: 1·2 + 2·0. Fila 2: 3·2 + 4·0."], "(2, 6)"),
+        T("Calcula C₁,₁(A, v) con A = [[1,2],[3,4]] y v = (1, 1) (se suma sobre las filas, el eje 1). Responde con comas.", "seq", "4,6", ["Columna 1: 1·1 + 3·1. Columna 2: 2·1 + 4·1."], "(4, 6)"),
+        T("¿Se puede contraer algún eje de una matriz 2×3 con alguno de una 4×5? (V/F)", "vf", "F", ["Los tamaños 2, 3 y 4, 5 no coinciden."], "F"),
+        T("Si A tiene 4 ejes y B tiene 3, ¿cuántos ejes tiene C(A, B)?", "num", "5", ["p + q − 2."], "5"),
+        T("El producto de matrices AB, ¿es la contracción del eje 2 de A con el eje 1 de B? (V/F)", "vf", "V", ["Columnas de A con filas de B."], "V")
+      ]
     }
   ],
   py: `
@@ -1328,7 +1354,14 @@ print(A * A)                          # ¡no es el producto!: multiplica casilla
 print(np.array([1, 2, 3]) @ np.array([4, 5, 6]))   # 32 (fila por columna)
 P = np.array([[0, 1], [1, 0]]); M = np.array([[1, 2], [3, 4]])
 print(P @ M); print(M @ P)            # filas intercambiadas / columnas intercambiadas
-print(np.eye(2) @ M)                  # la identidad no cambia nada</code></pre>`
+print(np.eye(2) @ M)                  # la identidad no cambia nada</code></pre>
+    <h4>Contracción de índices (einsum, Ejemplos 76 a 79)</h4>
+<pre><code>A = np.array([[[1, 2], [3, 4]], [[5, 6], [7, 8]]]); v = np.array([1, 2])
+print(np.einsum('ijk,k->ij', A, v))   # C3,1(A,v) = [[ 5 11] [17 23]]
+print(np.einsum('ijk,j->ik', A, v))   # C2,1(A,v) = [[ 7 10] [19 22]]
+B = np.array([[1, 2, 3], [4, 5, 6]])
+print(np.einsum('ik,kj->ij', B, B.T)) # producto de matrices
+print(np.einsum('ij->ji', B))         # transpuesta</code></pre>`
 });
 
 /* ================= VERSIÓN PARA DUMMIES ================= */
@@ -1814,7 +1847,12 @@ EASY.operaciones = `
     <li><b>La identidad</b> no cambia nada: I·A = A·I = A.</li>
     <li><b>Permutación:</b> P·A (P a la izquierda) intercambia las <b>filas</b> de A; A·P (P a la derecha) intercambia las <b>columnas</b>. Con P = [[0,1],[1,0]] y A = [[1,2],[3,4]]: PA = [[3,4],[1,2]] y AP = [[2,1],[4,3]].</li>
   </ul>
-  <p>Truco del libro (p. 87): multiplicar A por eⱼ por la derecha saca la columna j de A.</p>`;
+  <p>Truco del libro (p. 87): multiplicar A por eⱼ por la derecha saca la columna j de A.</p>
+  <h4>3.3 Contracción: multiplicar y sumar a lo largo de un eje</h4>
+  <p>Es el producto de matrices generalizado a tensores de cualquier orden. Eliges <b>un eje de A y un eje de B que midan lo mismo</b>; multiplicas las parejas y sumas. Esos dos ejes <b>desaparecen</b>; el resultado conserva los demás: primero los de A y después los de B.</p>
+  <p><b>Truco:</b> escribe los formatos en fila y tacha los dos números iguales. Lo que queda es el formato del resultado. Ejemplo: (2×3×<b>4</b>) con (<b>4</b>×5) → queda 2×3×5.</p>
+  <p>Ejemplo con A = [[1,2,3],[4,5,6]] (2×3) y v = (1, 0, 2) (3 componentes): C₂,₁(A, v) contrae el eje 2 de A (el índice j, el de las columnas) con v. Formatos: (2×<b>3</b>)(<b>3</b>) → queda 2. Cada fila de A se multiplica por v y se suma: fila 1 → 1·1 + 2·0 + 3·2 = 7; fila 2 → 4·1 + 5·0 + 6·2 = 16. Resultado: (7, 16).</p>
+  <div class="tip"><p>El número de ejes del resultado es p + q − 2: se pierden dos, uno de cada tensor. Y el producto de matrices AB es justo C₂,₁(A, B).</p></div>`;
 
 /* ----- Pestaña 0: lo que el libro da por sabido ----- */
 TABS.unshift({
