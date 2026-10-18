@@ -1248,6 +1248,89 @@ v = np.array([1, 2, 3])
 print(v.shape, v.reshape(3, 1).shape, v.reshape(1, 3).shape)   # (3,) (3,1) (1,3)</code></pre>`
 });
 
+/* ================= TEMA II · 3 · OPERACIONES CON TENSORES (3.1-3.2) ================= */
+TABS.push({
+  id: "operaciones", num: "II.3", name: "Combinaciones y producto de matrices", pg: "pp. 83–87",
+  src: "<b>Fuente:</b> Tema II, apartado 3 (3.1 y 3.2), pp. 83–87 (Ejemplos 66 a 73). Ejercicios propios. Sin tratar todavía: 3.3 Contracción de índices, 3.4 Multiplicación por bloques y 3.5 Propiedades (pp. 87–94). El Ejemplo 67 (matrices 3×2) salía ilegible en el texto convertido y no se reproduce aquí.",
+  theory: `
+    <h4>3.1 Combinaciones lineales de tensores (p. 83)</h4>
+    <p>Los tensores de un mismo formato forman un espacio lineal: se pueden <b>sumar</b> y <b>multiplicar por un escalar</b> componente a componente, igual que en K^I. Solo se pueden sumar tensores del <b>mismo formato</b>. Una combinación lineal αA + βB se calcula multiplicando cada tensor por su peso y sumando después. Ejemplo 66: α = −2, β = 1, u = (1, 0, 0, 3), v = (3, 1, 1, 0) da αu + βv = (1, 1, 1, −6). El Ejemplo 68 hace lo mismo con tensores de formato 2 × 2 × 3 en corchetes anidados.</p>
+    <h4>3.2 Producto de matrices (pp. 84–87)</h4>
+    <p>Si A ∈ K^(n×k) y B ∈ K^(k×m), el producto C = AB ∈ K^(n×m) se define por cᵢⱼ = Σₛ aᵢₛ bₛⱼ (suma desde s = 1 hasta k). Es decir, la casilla (i, j) es la <b>fila i de A por la columna j de B</b>: se multiplican casilla con casilla y se suma. Hace falta que el número de <b>columnas de A coincida con el de filas de B</b>.</p>
+    <ul>
+      <li>Fila por columna (Ejemplo 71): para a = (3, −1, 2), aᵀa = 3·3 + (−1)(−1) + 2·2 = 14, un número (1×1). Columna por fila, a aᵀ, es una matriz 3×3.</li>
+      <li>El orden importa: en general AB ≠ BA, y a veces solo existe una de las dos (Ejemplos 70 y 72).</li>
+      <li>Matrices de permutación (Ejemplo 73, p. 86): P·A reordena las <b>filas</b> de A igual que P reordena las filas de la identidad.</li>
+      <li>Columnas y componentes (p. 87): A·eⱼ es la columna j de A, y eᵢᵀ·A es la fila i. Así, aᵢⱼ = eᵢᵀ A eⱼ.</li>
+    </ul>`,
+  faq: [
+    { q: "¿Cómo sé si puedo multiplicar dos matrices?", a: "<p>Escribe los formatos juntos: (n×<b>k</b>)(<b>k</b>×m). Los dos números de en medio tienen que ser iguales. Desaparecen y el resultado es n×m.</p>" },
+    { q: "¿Por qué [[4],[5],[6]] tiene 3 filas y no 3 columnas?", a: "<p>Cada corchete interior es una fila. Aquí hay tres corchetes interiores de un elemento cada uno: formato 3×1.</p>" },
+    { q: "¿Qué hace la identidad al multiplicar?", a: "<p>Nada: I·A = A·I = A. Es el «1» de las matrices, y uno de los pocos casos en los que el orden no importa.</p>" },
+    { q: "¿Fila por columna da un número y columna por fila una matriz?", a: "<p>Sí. (1×3)(3×1) da 1×1, un solo número. (3×1)(1×3) da 3×3, una matriz entera.</p>" },
+    { q: "¿Por qué no sirve A * B en Python?", a: "<p>En NumPy, * multiplica casilla a casilla, que no es el producto de matrices. Para este se usa A @ B.</p>" }
+  ],
+  groups: [
+    {
+      title: "A · Combinaciones lineales de tensores",
+      intro: "Las matrices se escriben fila a fila (por ejemplo 2,3,1,6) y los vectores con comas.",
+      solved: [
+        E("α = −2, β = 1, u = (1, 0, 0, 3), v = (3, 1, 1, 0). Calcula αu + βv. (Ejemplo 66)", ["−2u = (−2, 0, 0, −6).", "Suma con v: (−2+3, 0+1, 0+1, −6+0)."], "(1, 1, 1, −6)"),
+        E("Con A = [[1,2],[3,4]] y B = [[0,1],[5,2]], calcula 2A − B.", ["2A = [[2,4],[6,8]].", "−B = [[0,−1],[−5,−2]].", "Suma casilla a casilla."], "[[2,3],[1,6]]"),
+        E("¿Se puede sumar una matriz 2×3 con una 3×2? (V/F)", ["Los formatos son distintos."], "F"),
+        E("¿Qué formato tiene 5·A si A es 4×3×2?", ["Multiplicar por un número no cambia el formato."], "4 × 3 × 2"),
+        E("Calcula 3u + 2v con u = (1, −2, 0) y v = (0, 1, 5).", ["3u = (3, −6, 0); 2v = (0, 2, 10).", "Suma: (3, −4, 10)."], "(3, −4, 10)")
+      ],
+      todo: [
+        T("Con u = (2, 1, −1) y v = (0, 3, 4), calcula 3u − v.", "seq", "6,0,-7", ["3u = (6, 3, −3).", "Resta v: (6−0, 3−3, −3−4)."], "(6, 0, −7)"),
+        T("Con A = [[1,0],[2,3]] y B = [[4,1],[0,1]], calcula A + 2B. Responde fila a fila.", "seq", "9,2,2,5", ["2B = [[8,2],[0,2]].", "Suma A: [[9,2],[2,5]]."], "[[9,2],[2,5]]"),
+        T("¿Se puede sumar [[1,2],[3,4]] con [[1,2,3]]? (V/F)", "vf", "F", ["Una es 2×2 y la otra 1×3."], "F"),
+        T("Con A = [[5,3],[2,1]] y B = [[1,1],[2,0]], calcula A − B. Responde fila a fila.", "seq", "4,2,0,1", ["Resta casilla a casilla."], "[[4,2],[0,1]]"),
+        T("Con u = (1, 2, 3), v = (3, 2, 1), α = 2, β = −1: calcula αu + βv.", "seq", "-1,2,5", ["2u = (2, 4, 6).", "−v = (−3, −2, −1)."], "(−1, 2, 5)")
+      ]
+    },
+    {
+      title: "B · Producto de matrices",
+      intro: "Resultados en matrices: fila a fila y separando con comas (por ejemplo 7,8,16,17). Primero escribe el formato del producto.",
+      solved: [
+        E("¿Qué formato tiene el producto de una matriz 3×2 por una 2×4?", ["(3×2)(2×4): los 2 de en medio coinciden y desaparecen."], "3 × 4"),
+        E("Calcula [[1,2],[3,4]]·[[1],[1]].", ["Formato (2×2)(2×1) = 2×1.", "c₁₁ = 1·1 + 2·1 = 3; c₂₁ = 3·1 + 4·1 = 7."], "[[3],[7]]"),
+        E("Calcula [1,2,3]·[[4],[5],[6]] (fila por columna).", ["Parejas: 1·4, 2·5, 3·6.", "4 + 10 + 18."], "32"),
+        E("Calcula [[1],[2]]·[[3,4]] (columna por fila).", ["Formato (2×1)(1×2) = 2×2.", "Cada casilla es un solo producto."], "[[3,4],[6,8]]"),
+        E("Calcula [[1,2,3],[4,5,6]]·[[1,0],[0,1],[2,2]].", ["c₁₁ = 1·1 + 2·0 + 3·2 = 7; c₁₂ = 1·0 + 2·1 + 3·2 = 8.", "c₂₁ = 4·1 + 5·0 + 6·2 = 16; c₂₂ = 4·0 + 5·1 + 6·2 = 17."], "[[7,8],[16,17]]"),
+        E("Calcula AB y BA con A = [[2,1],[0,3]] y B = [[1,4],[5,2]].", ["AB = [[2·1+1·5, 2·4+1·2],[0·1+3·5, 0·4+3·2]] = [[7,10],[15,6]].", "BA = [[1·2+4·0, 1·1+4·3],[5·2+2·0, 5·1+2·3]] = [[2,13],[10,11]].", "AB ≠ BA."], "AB = [[7,10],[15,6]]; BA = [[2,13],[10,11]]"),
+        E("Con P = [[0,1],[1,0]] y A = [[1,2],[3,4]], calcula PA y AP.", ["PA = [[3,4],[1,2]]: intercambia las filas.", "AP = [[2,1],[4,3]]: intercambia las columnas."], "PA = [[3,4],[1,2]]; AP = [[2,1],[4,3]]")
+      ],
+      todo: [
+        T("¿Se puede multiplicar una matriz 2×3 por otra 2×3? (V/F)", "vf", "F", ["Columnas de la primera: 3. Filas de la segunda: 2."], "F"),
+        T("¿Qué formato tiene el producto de una 4×2 por una 2×5? Tamaños separados por comas.", "seq", "4,5", ["Quedan los números de fuera."], "4 × 5"),
+        T("Calcula [[1,2],[0,1]]·[[3],[4]]. Responde fila a fila.", "seq", "11,4", ["c₁₁ = 1·3 + 2·4 = 11.", "c₂₁ = 0·3 + 1·4 = 4."], "[[11],[4]]"),
+        T("Calcula [2,1,0]·[[1],[3],[5]].", "num", "5", ["2·1 + 1·3 + 0·5 = 2 + 3 + 0."], "5"),
+        T("Calcula [[2],[3]]·[[1,0,4]]. Responde fila a fila.", "seq", "2,0,8,3,0,12", ["Formato (2×1)(1×3) = 2×3.", "Fila 1: 2·1, 2·0, 2·4. Fila 2: 3·1, 3·0, 3·4."], "[[2,0,8],[3,0,12]]"),
+        T("Calcula [[1,1],[2,0]]·[[2,3],[1,4]]. Responde fila a fila.", "seq", "3,7,4,6", ["c₁₁ = 1·2 + 1·1 = 3; c₁₂ = 1·3 + 1·4 = 7.", "c₂₁ = 2·2 + 0·1 = 4; c₂₂ = 2·3 + 0·4 = 6."], "[[3,7],[4,6]]"),
+        T("Con P = [[0,1],[1,0]] y A = [[5,6],[7,8]], calcula AP. Responde fila a fila.", "seq", "6,5,8,7", ["AP intercambia las columnas de A."], "[[6,5],[8,7]]"),
+        T("¿Es siempre AB = BA? (V/F)", "vf", "F", ["Contraejemplo en los ejercicios resueltos de esta pestaña."], "F")
+      ]
+    }
+  ],
+  py: `
+    <h4>Combinaciones lineales</h4>
+<pre><code>import numpy as np
+u = np.array([1, 0, 0, 3]); v = np.array([3, 1, 1, 0])
+print(-2*u + v)                       # [ 1  1  1 -6]
+A = np.array([[1, 2], [3, 4]]); B = np.array([[0, 1], [5, 2]])
+print(2*A - B)                        # [[2 3] [1 6]]</code></pre>
+    <h4>Producto de matrices</h4>
+<pre><code>A = np.array([[1, 2, 3], [4, 5, 6]])
+B = np.array([[1, 0], [0, 1], [2, 2]])
+print(A @ B)                          # [[ 7  8] [16 17]]
+print(A * A)                          # ¡no es el producto!: multiplica casilla a casilla
+print(np.array([1, 2, 3]) @ np.array([4, 5, 6]))   # 32 (fila por columna)
+P = np.array([[0, 1], [1, 0]]); M = np.array([[1, 2], [3, 4]])
+print(P @ M); print(M @ P)            # filas intercambiadas / columnas intercambiadas
+print(np.eye(2) @ M)                  # la identidad no cambia nada</code></pre>`
+});
+
 /* ================= VERSIÓN PARA DUMMIES ================= */
 const EASY = {};
 
@@ -1701,6 +1784,38 @@ EASY.tensores = `
   <h4>2.7–2.8 Identificaciones y qué es un vector (pp. 81–82)</h4>
   <p>Un número a se puede ver como a, [a] o [[a]]. Una lista (v₁, v₂, v₃) = [v₁, v₂, v₃] = [[v₁],[v₂],[v₃]] (columna). Un covector es una matriz fila 1×n. Con corchetes y tuplas, siempre comas; en la tabla rectangular, espacios. En esta asignatura, <b>vector</b> es solo un tensor de orden 1. En Python no son lo mismo: np.array([1,2,3]) tiene formato (3,) y la columna, (3,1).</p>`;
 
+EASY.operaciones = `
+  <h4>3.1 Sumar y escalar: casilla por casilla</h4>
+  <p>Igual que con las listas del apartado 1, sumar matrices o multiplicarlas por un número se hace <b>casilla por casilla</b>. Solo hay una condición: las dos tienen que tener el <b>mismo formato</b>.</p>
+  <p>Ejemplo: 2A − B con A = [[1,2],[3,4]] y B = [[0,1],[5,2]].</p>
+  <ul>
+    <li>2A = [[2,4],[6,8]] (cada casilla por 2).</li>
+    <li>−B = [[0,−1],[−5,−2]].</li>
+    <li>Suma: [[2,3],[1,6]].</li>
+  </ul>
+  <p>Una 2×2 y una 2×3 no se pueden sumar: no hay casilla con la que emparejar la tercera columna.</p>
+  <h4>3.2 Multiplicar matrices: fila por columna</h4>
+  <p>Aquí <b>no</b> se multiplica casilla con casilla. Cada casilla del resultado sale de una <b>fila de la primera</b> y una <b>columna de la segunda</b>: se multiplican las parejas y se suman.</p>
+  <p><b>Paso 1: ¿se puede?</b> Escribe los formatos juntos: (n×<b>k</b>)(<b>k</b>×m). Los dos de en medio deben ser iguales; el resultado es n×m.</p>
+  <p><b>Paso 2: cada casilla.</b> Ejemplo con A = [[1,2,3],[4,5,6]] (2×3) y B = [[1,0],[0,1],[2,2]] (3×2). Sale una 2×2:</p>
+  <ul>
+    <li>c₁₁ = fila 1 de A por columna 1 de B = 1·1 + 2·0 + 3·2 = <b>7</b>.</li>
+    <li>c₁₂ = fila 1 por columna 2 = 1·0 + 2·1 + 3·2 = <b>8</b>.</li>
+    <li>c₂₁ = fila 2 por columna 1 = 4·1 + 5·0 + 6·2 = <b>16</b>.</li>
+    <li>c₂₂ = fila 2 por columna 2 = 4·0 + 5·1 + 6·2 = <b>17</b>.</li>
+  </ul>
+  <p>Resultado: [[7,8],[16,17]].</p>
+  <div class="tip"><p>Para contar filas y columnas de una matriz, cuenta los corchetes interiores: [[4],[5],[6]] tiene tres, así que son <b>3 filas</b> de un elemento (formato 3×1).</p></div>
+  <h4>Casos especiales</h4>
+  <ul>
+    <li><b>Fila por columna</b> (1×3)(3×1): sale un solo número. [1,2,3]·[[4],[5],[6]] = 4 + 10 + 18 = 32.</li>
+    <li><b>Columna por fila</b> (2×1)(1×2): sale una matriz entera. [[1],[2]]·[[3,4]] = [[3,4],[6,8]].</li>
+    <li><b>El orden importa.</b> Con A = [[2,1],[0,3]] y B = [[1,4],[5,2]]: AB = [[7,10],[15,6]], pero BA = [[2,13],[10,11]]. Distintas.</li>
+    <li><b>La identidad</b> no cambia nada: I·A = A·I = A.</li>
+    <li><b>Permutación:</b> P·A (P a la izquierda) intercambia las <b>filas</b> de A; A·P (P a la derecha) intercambia las <b>columnas</b>. Con P = [[0,1],[1,0]] y A = [[1,2],[3,4]]: PA = [[3,4],[1,2]] y AP = [[2,1],[4,3]].</li>
+  </ul>
+  <p>Truco del libro (p. 87): multiplicar A por eⱼ por la derecha saca la columna j de A.</p>`;
+
 /* ----- Pestaña 0: lo que el libro da por sabido ----- */
 TABS.unshift({
   id: "previo", num: "0", name: "Antes de empezar", pg: "repaso",
@@ -1849,8 +1964,10 @@ function check(ex, input) {
     }
     case "set": return canon(raw) === canon(ex.ans);
     case "seq": {
+      const flat = !/[\[\](){}]/.test(ex.ans);
       const clean = (x) => {
         x = x.trim().replace(/[;]+/g, ",");
+        if (flat) x = x.replace(/[\])]\s*[\[(]/g, ",").replace(/[\[\]()]/g, "");
         if (!x.includes(",")) x = x.replace(/\s+/g, ",");
         return splitTop(x.replace(/^[\[(]|[\])]$/g, "")).map(t => norm(t).replace(/^[a-z]=/, ""));
       };
