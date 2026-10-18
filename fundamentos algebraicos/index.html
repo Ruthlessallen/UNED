@@ -1121,8 +1121,8 @@ print(one_hot("perro"))   # [0, 1, 0, 0]  → es e_2</code></pre>`
 
 /* ================= TEMA II · 2 · TENSORES ================= */
 TABS.push({
-  id: "tensores", num: "II.2", name: "Tensores", pg: "pp. 64–71",
-  src: "<b>Fuente:</b> Tema II, apartado 2 (2.1 a 2.5), pp. 64–71. Ejercicios propios. <b>Posible errata</b> (p. 70): se escribe D = [9, 9, 2] donde por el contexto debería ser D = [[9, 9, 2]] (una matriz de una fila). Pendiente de tu visto bueno. Faltan 2.6 a 2.8 (pp. 74–82).",
+  id: "tensores", num: "II.2", name: "Tensores", pg: "pp. 64–82",
+  src: "<b>Fuente:</b> Tema II, apartado 2 (2.1 a 2.8), pp. 64–82. Ejercicios propios. <b>Posible errata</b> (p. 70): se escribe D = [9, 9, 2] donde por el contexto debería ser D = [[9, 9, 2]] (una matriz de una fila). Pendiente de tu visto bueno. Sin tratar todavía: las unitriangulares por bloques (p. 78). Los ejemplos A–D de la p. 80 no se reproducen aquí; los ejemplos de matrices son propios.",
   theory: `
     <h4>Qué es un tensor (2.1–2.2)</h4>
     <p>Un <b>tensor</b> es un contenedor de datos con índices: una tabla de números que puede tener uno, dos, tres o más <b>ejes</b>. El <b>orden</b> es el número de ejes. El <b>formato</b> es la lista de tamaños de cada eje (n₁ × n₂ × …). La <b>dimensión</b> (número total de componentes) es el producto de esos tamaños.</p>
@@ -1136,11 +1136,28 @@ TABS.push({
     <p>Se pueden pegar matrices para formar otra mayor. <b>Una al lado de otra</b> exige el mismo número de filas y las columnas se suman. <b>Una debajo de otra</b> exige el mismo número de columnas y las filas se suman. Si no encajan, no se puede.</p>
     <p><b>Apilar</b> es distinto: apilar k matrices del mismo formato n × m da un tensor nuevo de formato k × n × m (se añade un eje nuevo).</p>
     <h4>Transposición (2.5, p. 71)</h4>
-    <p>La transpuesta Aᵀ de una matriz n × m es la matriz m × n que se obtiene intercambiando filas y columnas: (Aᵀ)ᵢⱼ = Aⱼᵢ. La transpuesta de la transpuesta es la matriz original. La transposición de ejes de tensores generales y la conjugada se mencionan en el libro y no se desarrollan aquí.</p>`,
+    <p>La transpuesta Aᵀ de una matriz n × m es la matriz m × n que se obtiene intercambiando filas y columnas: (Aᵀ)ᵢⱼ = Aⱼᵢ. La transpuesta de la transpuesta es la matriz original. La transposición de ejes de tensores generales y la conjugada se mencionan en el libro y no se desarrollan aquí.</p>
+    <h4>2.6 Algunas matrices importantes (pp. 74–81)</h4>
+    <ul>
+      <li><b>Formas</b> (n filas × m columnas): cuadrada (n = m), alta (n &gt; m), ancha (n &lt; m); rectangular es el término general.</li>
+      <li><b>Nula</b> 0 (todo ceros) y de <b>unos</b> 1 (todo unos).</li>
+      <li><b>Diagonal</b>: cuadrada con dᵢⱼ = 0 si i ≠ j; diag(a) la forma con el vector a en la diagonal. <b>Identidad</b> Iₙ = diag(1,…,1). <b>Diagonal por bloques</b>: diag(A₁,…,Aₖ) con bloques cuadrados (Ejemplo 64, p. 75).</li>
+      <li><b>Diagonal-rectangular</b>: aᵢⱼ = 0 si i ≠ j, sin exigir que sea cuadrada (Ejemplo 65, p. 76).</li>
+      <li><b>Permutación</b>: la identidad con las columnas reordenadas (p. 76).</li>
+      <li><b>eᵢⱼ</b>: 1 en la posición (i, j) y 0 en las demás. Toda A ∈ K^(n×m) es A = Σ aᵢⱼ eᵢⱼ (p. 77). Hay n·m.</li>
+      <li><b>Triangular superior</b>: aᵢⱼ = 0 si i &gt; j. <b>Inferior</b>: aᵢⱼ = 0 si i &lt; j. <b>Unitriangular</b>: triangular con unos en la diagonal (p. 77).</li>
+      <li><b>Trapezoidal superior</b>: aᵢⱼ = 0 si i &gt; j, sin ser necesariamente cuadrada (ancha: A = [U B]; alta: A = [U; 0]). Inferior: su transpuesta es trapezoidal superior (pp. 79–80).</li>
+      <li><b>Escalonada (REF)</b>: trapezoidal superior donde la cadena de ceros iniciales crece fila a fila y una fila nula solo tiene debajo filas nulas. <b>Pivote</b>: primer elemento no nulo de una fila. <b>Escalonada reducida (RREF)</b>: pivotes = 1 y ceros encima de cada pivote (pp. 80–81).</li>
+    </ul>
+    <h4>2.7 Identificaciones y 2.8 ¿Qué es un vector? (pp. 81–82)</h4>
+    <p>a = [a] = [[a]] para todo a ∈ K (K = K¹ = K^(1×1)). Las n-tuplas se identifican con los vectores y las matrices columna: (v₁, …, vₙ) = [v₁, …, vₙ] = [[v₁], …, [vₙ]], de modo que Kⁿ = K^(n×1). Un covector es una matriz fila 1×n. En corchetes y tuplas se separa con comas; en la tabla rectangular, con espacios. En programación a veces sí se distinguen. En esta asignatura <b>vector</b> es solo un tensor de orden 1, y no se distingue entre puntos (posiciones) y vectores (direcciones).</p>`,
   faq: [
     { q: "¿Cuál es la diferencia entre [[A], [D]] y [[A, D]]?", a: "<p>[[A, D]] pone A <b>y</b> D en la misma fila de bloques: van una al lado de otra (las columnas se suman, hacen falta las mismas filas). [[A], [D]] pone A en una fila de bloques y D en otra: van una encima de otra (las filas se suman, hacen falta las mismas columnas).</p>" },
     { q: "¿Cómo se sabe si dos matrices se pueden pegar?", a: "<p>Se escribe el formato de cada una. Para pegar al lado, el primer número (filas) tiene que ser igual. Para pegar debajo, el segundo (columnas) tiene que ser igual.</p>" },
     { q: "¿Por qué un tensor 4 × 3 × 3 tiene 36 componentes?", a: "<p>Hay 4 posiciones en el primer eje, por cada una 3 en el segundo, y por cada una 3 en el tercero: 4·3·3 = 36.</p>" },
+    { q: "¿Cuántas piezas eᵢⱼ hay en las matrices 3×4?", a: "<p>Una por cada casilla: 3·4 = 12. Cualquier matriz 3×4 es combinación de ellas, con sus propias componentes como pesos.</p>" },
+    { q: "¿Una matriz trapezoidal es lo mismo que una escalonada?", a: "<p>No. Trapezoidal solo pide ceros debajo de la diagonal. Escalonada pide además que los ceros iniciales de cada fila crezcan y que las filas nulas queden abajo.</p>" },
+    { q: "¿Qué diferencia hay entre el vector (3,) y la matriz columna (3,1) en Python?", a: "<p>En el libro se identifican; en NumPy no: np.array([1,2,3]) tiene formato (3,) y np.array([[1],[2],[3]]) tiene (3,1).</p>" },
     { q: "¿Apilar y concatenar es lo mismo?", a: "<p>No. Concatenar pega y no cambia el orden (sigue siendo una matriz). Apilar crea un eje nuevo y sube el orden en uno.</p>" }
   ],
   groups: [
@@ -1179,6 +1196,28 @@ TABS.push({
         T("Si apilas cuatro matrices 3 × 2, ¿qué formato sale? Responde los tamaños separados por comas.", "seq", "4,3,2", ["El eje nuevo va delante: 4 × 3 × 2."], "4 × 3 × 2"),
         T("¿Qué formato tiene la transpuesta de una matriz 4 × 7? Responde los tamaños separados por comas.", "seq", "7,4", ["Se intercambian filas y columnas."], "7 × 4")
       ]
+    },
+    {
+      title: "C · Matrices importantes e identificaciones",
+      intro: "Matrices con comas: [[1,2],[3,4]]. Cuando se pida un formato, tamaños separados por comas.",
+      solved: [
+        E("¿Cómo se llama una matriz 5×2: cuadrada, alta o ancha?", ["Tiene más filas (5) que columnas (2)."], "alta"),
+        E("Escribe diag(3, 0, 4).", ["Los números en la diagonal y ceros fuera."], "[[3,0,0],[0,0,0],[0,0,4]]"),
+        E("¿Es diagonal-rectangular [[5,0,0],[0,2,0]]? ¿Es diagonal?", ["Fuera de las posiciones (1,1) y (2,2) todo son ceros: diagonal-rectangular.", "Es 2×3, no cuadrada: no es diagonal a secas."], "diagonal-rectangular sí, diagonal no"),
+        E("Escribe la permutación de I₃ que intercambia las columnas 2 y 3.", ["La columna 1 queda igual."], "[[1,0,0],[0,0,1],[0,1,0]]"),
+        E("Escribe 3·e₁₁ + 4·e₂₁ + 6·e₂₂ como matriz 2×2.", ["e₁₁ coloca el 3 en (1,1); e₂₁ el 4 en (2,1); e₂₂ el 6 en (2,2)."], "[[3,0],[4,6]]"),
+        E("¿Es triangular superior [[1,2],[0,3]]? ¿Y [[1,0],[2,3]]?", ["La primera tiene ceros debajo de la diagonal: superior.", "La segunda tiene ceros encima: inferior."], "superior; inferior"),
+        E("¿Es escalonada reducida [[1,0,2],[0,1,3]]?", ["Pivotes en (1,1) y (2,2), los dos valen 1.", "Encima del pivote (2,2) hay un 0."], "V")
+      ],
+      todo: [
+        T("¿Cuántas piezas eᵢⱼ distintas hay en las matrices 3×4?", "num", "12", ["Una por casilla: 3·4."], "12"),
+        T("¿Es diag(2,5,7) igual a su transpuesta? (V/F)", "vf", "V", ["Los de la diagonal no se mueven y los ceros solo intercambian sitio con ceros."], "V"),
+        T("¿Es unitriangular [[1,4],[0,2]]? (V/F)", "vf", "F", ["La diagonal tiene un 2, no solo unos."], "F"),
+        T("¿Es trapezoidal superior [[2,1,0,5],[0,3,1,1]]? (V/F)", "vf", "V", ["Solo la posición (2,1) está debajo de la diagonal y vale 0."], "V"),
+        T("¿Es escalonada [[1,1,1],[0,2,3],[0,0,4]]? (V/F)", "vf", "V", ["Ceros iniciales por fila: 0, 1, 2."], "V"),
+        T("¿Qué formato tiene la matriz columna [[4],[5],[6]]? Tamaños separados por comas.", "seq", "3,1", ["Tres filas de un elemento."], "3 × 1"),
+        T("¿Qué formato tiene el covector [[4,5,6]]? Tamaños separados por comas.", "seq", "1,3", ["Una fila de tres elementos."], "1 × 3")
+      ]
     }
   ],
   py: `
@@ -1198,7 +1237,15 @@ D = np.array([[7, 8]])
 print(np.block([A, B]))        # al lado: 2×3
 print(np.block([[A], [D]]))    # debajo: 3×2
 print(np.stack([A, A, A]).shape)   # (3, 2, 2)  apilar crea un eje nuevo
-print(np.array([[7, 8], [9, 0], [1, 2]]).T)   # transpuesta</code></pre>`
+print(np.array([[7, 8], [9, 0], [1, 2]]).T)   # transpuesta</code></pre>
+    <h4>Matrices importantes</h4>
+<pre><code>np.zeros((2, 3)); np.ones((2, 3))     # nula y de unos
+np.diag([2, 5, 7]); np.eye(3)         # diagonal e identidad
+M = np.array([[1,2,3],[4,5,6],[7,8,9]])
+np.triu(M); np.tril(M)                # parte superior / inferior
+np.eye(3)[:, [0, 2, 1]]               # permutación (columnas 2 y 3 intercambiadas)
+v = np.array([1, 2, 3])
+print(v.shape, v.reshape(3, 1).shape, v.reshape(1, 3).shape)   # (3,) (3,1) (1,3)</code></pre>`
 });
 
 /* ================= VERSIÓN PARA DUMMIES ================= */
@@ -1630,7 +1677,29 @@ EASY.tensores = `
   <p>Pegar sigue dando una tabla de dos ejes. <b>Apilar</b> pone las tablas una sobre otra como folios: aparece un eje nuevo. Cuatro matrices 3 × 2 apiladas dan un tensor 4 × 3 × 2 (el 4 es cuántas hay).</p>
   <h4>Transpuesta: girar la tabla</h4>
   <p>Aᵀ convierte las filas en columnas. Si A tiene formato n × m, Aᵀ tiene formato m × n. Ejemplo: [[7, 8], [9, 0], [1, 2]] es 3 × 2; su transpuesta es [[7, 9, 1], [8, 0, 2]], de 2 × 3. Cada columna de la original (7, 9, 1) pasa a ser una fila.</p>
-  <div class="note"><strong>Posible errata (p. 70):</strong> D = [9, 9, 2] aparece sin los corchetes de matriz; por el contexto debería ser D = [[9, 9, 2]].</div>`;
+  <div class="note"><strong>Posible errata (p. 70):</strong> D = [9, 9, 2] aparece sin los corchetes de matriz; por el contexto debería ser D = [[9, 9, 2]].</div>
+  <h4>2.6 Matrices con nombre propio (pp. 74–81)</h4>
+  <ul>
+    <li><b>Forma:</b> cuadrada (mismas filas que columnas), alta (más filas), ancha (más columnas).</li>
+    <li><b>Nula:</b> todo ceros. <b>De unos:</b> todo unos.</li>
+    <li><b>Diagonal:</b> cuadrada, solo la diagonal principal puede tener números; el resto, ceros. <b>Identidad:</b> diagonal de unos, I₃ = [[1,0,0],[0,1,0],[0,0,1]]. Es el "1" de las matrices.</li>
+    <li><b>Diagonal por bloques:</b> cajas cuadradas a lo largo de la diagonal y ceros fuera. Ejemplo 64 (6×6): A₁ = [[1,2],[3,1]], A₂ = [5], A₃ = [[1,0,2],[0,1,0],[0,0,2]]. Los valores los he leído del texto convertido, sin comprobar en la imagen de la página.</li>
+    <li><b>Diagonal-rectangular:</b> como la diagonal, pero sin exigir que sea cuadrada. Ejemplo 3×2: [[3,0],[0,4],[0,0]].</li>
+    <li><b>Permutación:</b> la identidad con las columnas reordenadas. Un solo 1 en cada fila y cada columna.</li>
+  </ul>
+  <div class="tip"><p>Transponer deja igual cualquier matriz diagonal: los de la diagonal no se mueven y los ceros solo cambian de sitio con otros ceros. Ser cuadrada no basta: [[1,2],[3,4]] sí cambia.</p></div>
+  <h4>Las piezas eᵢⱼ</h4>
+  <p>eᵢⱼ tiene un 1 en la fila i, columna j y ceros en el resto. Para 2×2: e₁₁ = [[1,0],[0,0]], e₁₂ = [[0,1],[0,0]], e₂₁ = [[0,0],[1,0]], e₂₂ = [[0,0],[0,1]]. Toda matriz se construye con ellas usando sus propias componentes como pesos: [[5,7],[2,9]] = 5e₁₁ + 7e₁₂ + 2e₂₁ + 9e₂₂. Hay una por casilla: en una matriz 3×4 son 12.</p>
+  <h4>Triangulares, trapezoidales y escalonadas</h4>
+  <ul>
+    <li><b>Triangular superior:</b> ceros debajo de la diagonal. Ejemplo [[1,2,3],[0,4,5],[0,0,6]]. <b>Inferior:</b> ceros encima.</li>
+    <li><b>Unitriangular:</b> triangular con unos en toda la diagonal.</li>
+    <li><b>Trapezoidal:</b> lo mismo que triangular, pero sin ser cuadrada. [[2,1,0,5],[0,3,1,1]] es trapezoidal superior ancha: solo hay que mirar debajo de la diagonal.</li>
+    <li><b>Escalonada:</b> trapezoidal superior donde los ceros del principio de cada fila van creciendo, y una fila de ceros solo puede tener debajo más filas de ceros. [[1,2,3],[0,0,4],[0,0,0]] sí; [[1,2,3],[0,5,4],[0,6,7]] no.</li>
+    <li><b>Pivote:</b> primer número distinto de cero de una fila. <b>Escalonada reducida:</b> pivotes valen 1 y no hay nada distinto de cero encima de ellos. [[1,0,3],[0,1,2]] sí; [[1,2,3],[0,1,2]] no (el 2 encima del pivote de la fila 2).</li>
+  </ul>
+  <h4>2.7–2.8 Identificaciones y qué es un vector (pp. 81–82)</h4>
+  <p>Un número a se puede ver como a, [a] o [[a]]. Una lista (v₁, v₂, v₃) = [v₁, v₂, v₃] = [[v₁],[v₂],[v₃]] (columna). Un covector es una matriz fila 1×n. Con corchetes y tuplas, siempre comas; en la tabla rectangular, espacios. En esta asignatura, <b>vector</b> es solo un tensor de orden 1. En Python no son lo mismo: np.array([1,2,3]) tiene formato (3,) y la columna, (3,1).</p>`;
 
 /* ----- Pestaña 0: lo que el libro da por sabido ----- */
 TABS.unshift({

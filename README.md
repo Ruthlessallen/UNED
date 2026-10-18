@@ -4,7 +4,7 @@ Material de estudio personal.
 
 ## Fundamentos algebraicos para la IA (UNED 26-27, cód. 71031027)
 
-La carpeta [`fundamentos algebraicos`](fundamentos%20algebraicos/index.html) contiene una web de estudio del **Tema I (Escalares)** y del **apartados 1 y 2 (parcial) del Tema II (espacio lineal K^I y tensores)**: una pestaña por apartado, explicación "para dummies" o más técnica, ejercicios resueltos y por resolver, y ejemplos en Python.
+La carpeta [`fundamentos algebraicos`](fundamentos%20algebraicos/index.html) contiene una web de estudio del **Tema I (Escalares)** y de los **apartados 1 y 2 del Tema II (espacio lineal K^I y tensores)**: una pestaña por apartado, explicación "para dummies" o más técnica, ejercicios resueltos y por resolver, y ejemplos en Python.
 
 ## Aviso importante
 
