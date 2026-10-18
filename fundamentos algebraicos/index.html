@@ -1119,6 +1119,88 @@ def one_hot(palabra):
 print(one_hot("perro"))   # [0, 1, 0, 0]  → es e_2</code></pre>`
 });
 
+/* ================= TEMA II · 2 · TENSORES ================= */
+TABS.push({
+  id: "tensores", num: "II.2", name: "Tensores", pg: "pp. 64–71",
+  src: "<b>Fuente:</b> Tema II, apartado 2 (2.1 a 2.5), pp. 64–71. Ejercicios propios. <b>Posible errata</b> (p. 70): se escribe D = [9, 9, 2] donde por el contexto debería ser D = [[9, 9, 2]] (una matriz de una fila). Pendiente de tu visto bueno. Faltan 2.6 a 2.8 (pp. 74–82).",
+  theory: `
+    <h4>Qué es un tensor (2.1–2.2)</h4>
+    <p>Un <b>tensor</b> es un contenedor de datos con índices: una tabla de números que puede tener uno, dos, tres o más <b>ejes</b>. El <b>orden</b> es el número de ejes. El <b>formato</b> es la lista de tamaños de cada eje (n₁ × n₂ × …). La <b>dimensión</b> (número total de componentes) es el producto de esos tamaños.</p>
+    <ul>
+      <li>Orden 0: un escalar. Orden 1: un vector (un eje). Orden 2: una matriz (filas × columnas). Orden 3 o más: tensor general.</li>
+      <li>Ejemplo: una matriz de formato 4 × 3 tiene orden 2 y 4·3 = 12 componentes. Un tensor de formato 4 × 3 × 3 tiene orden 3 y 36 componentes.</li>
+    </ul>
+    <h4>Notación de corchetes anidados (2.3)</h4>
+    <p>Una matriz se escribe como lista de filas: [[1, 2, 5], [3, 4, 6]] es una matriz 2 × 3. Un tensor de orden 3 es una lista de matrices, y así sucesivamente. El formato se lee contando de fuera hacia dentro: cuántos elementos tiene el corchete exterior, cuántos el siguiente, etc.</p>
+    <h4>Matrices por bloques (2.4, p. 70)</h4>
+    <p>Se pueden pegar matrices para formar otra mayor. <b>Una al lado de otra</b> exige el mismo número de filas y las columnas se suman. <b>Una debajo de otra</b> exige el mismo número de columnas y las filas se suman. Si no encajan, no se puede.</p>
+    <p><b>Apilar</b> es distinto: apilar k matrices del mismo formato n × m da un tensor nuevo de formato k × n × m (se añade un eje nuevo).</p>
+    <h4>Transposición (2.5, p. 71)</h4>
+    <p>La transpuesta Aᵀ de una matriz n × m es la matriz m × n que se obtiene intercambiando filas y columnas: (Aᵀ)ᵢⱼ = Aⱼᵢ. La transpuesta de la transpuesta es la matriz original. La transposición de ejes de tensores generales y la conjugada se mencionan en el libro y no se desarrollan aquí.</p>`,
+  faq: [
+    { q: "¿Cuál es la diferencia entre [[A], [D]] y [[A, D]]?", a: "<p>[[A, D]] pone A <b>y</b> D en la misma fila de bloques: van una al lado de otra (las columnas se suman, hacen falta las mismas filas). [[A], [D]] pone A en una fila de bloques y D en otra: van una encima de otra (las filas se suman, hacen falta las mismas columnas).</p>" },
+    { q: "¿Cómo se sabe si dos matrices se pueden pegar?", a: "<p>Se escribe el formato de cada una. Para pegar al lado, el primer número (filas) tiene que ser igual. Para pegar debajo, el segundo (columnas) tiene que ser igual.</p>" },
+    { q: "¿Por qué un tensor 4 × 3 × 3 tiene 36 componentes?", a: "<p>Hay 4 posiciones en el primer eje, por cada una 3 en el segundo, y por cada una 3 en el tercero: 4·3·3 = 36.</p>" },
+    { q: "¿Apilar y concatenar es lo mismo?", a: "<p>No. Concatenar pega y no cambia el orden (sigue siendo una matriz). Apilar crea un eje nuevo y sube el orden en uno.</p>" }
+  ],
+  groups: [
+    {
+      title: "A · Formato, orden y dimensión",
+      intro: "Cuando se pidan tamaños, escríbelos separados por comas (por ejemplo 4,3,2).",
+      solved: [
+        E("Una tabla de 4 filas y 3 columnas: ¿qué formato, orden y número de componentes tiene?", ["Formato 4 × 3.", "Tiene dos ejes: orden 2.", "4·3 = 12 componentes."], "4 × 3, orden 2, 12"),
+        E("Un tensor de formato 4 × 3 × 3: ¿qué orden y cuántas componentes tiene?", ["Tres ejes: orden 3.", "4·3·3 = 36."], "orden 3, 36"),
+        E("¿Qué formato tiene [[1, 2], [3, 4], [5, 6]]?", ["Tiene 3 filas (corchetes interiores) de 2 elementos cada una."], "3 × 2"),
+        E("¿Qué formato tiene [[[1, 2], [3, 4]], [[5, 6], [7, 8]]]?", ["Corchete exterior: 2 elementos.", "Cada uno tiene 2 filas de 2 elementos."], "2 × 2 × 2"),
+        E("¿Qué orden tiene el vector [7, 8, 9]?", ["Un solo eje."], "1")
+      ],
+      todo: [
+        T("Una matriz con 5 filas y 2 columnas: ¿cuántas componentes tiene?", "num", "10", ["5·2."], "10"),
+        T("Un tensor de formato 2 × 3 × 4: ¿cuántas componentes tiene?", "num", "24", ["2·3·4 = 24."], "24"),
+        T("¿Qué formato tiene [[1, 2, 3], [4, 5, 6]]? Responde los tamaños separados por comas.", "seq", "2,3", ["2 filas de 3 elementos."], "2 × 3"),
+        T("¿Qué orden tiene un tensor de formato 3 × 3 × 3 × 3?", "num", "4", ["Cuatro ejes."], "4"),
+        T("¿Qué formato tiene [[[1, 2, 3], [4, 5, 6]], [[7, 8, 9], [0, 1, 2]], [[3, 4, 5], [6, 7, 8]]]? Responde los tamaños separados por comas.", "seq", "3,2,3", ["Exterior: 3 elementos.", "Cada uno: 2 filas de 3 elementos."], "3 × 2 × 3")
+      ]
+    },
+    {
+      title: "B · Bloques, apilar y transpuesta",
+      intro: "Usa A = [[1, 2], [3, 4]], B = [[5], [6]], D = [[7, 8]]. En matrices escribe las componentes fila a fila separadas por comas.",
+      solved: [
+        E("¿Qué formato tiene [A, B] (A al lado de B)?", ["A es 2 × 2 y B es 2 × 1: mismo número de filas (2).", "Las columnas se suman: 2 + 1 = 3."], "2 × 3"),
+        E("¿Qué formato tiene [[A], [D]] (D debajo de A)?", ["A es 2 × 2 y D es 1 × 2: mismo número de columnas (2).", "Las filas se suman: 2 + 1 = 3."], "3 × 2"),
+        E("¿Se puede pegar B al lado de D? (V/F)", ["B es 2 × 1 y D es 1 × 2: filas distintas (2 y 1)."], "F"),
+        E("¿Cuál es la transpuesta de [[7, 8], [9, 0], [1, 2]]?", ["La matriz es 3 × 2, así que la transpuesta es 2 × 3.", "Las columnas se convierten en filas."], "[[7, 9, 1], [8, 0, 2]]"),
+        E("Si apilas tres matrices 2 × 5, ¿qué formato sale?", ["Se añade un eje nuevo delante: 3 × 2 × 5."], "3 × 2 × 5")
+      ],
+      todo: [
+        T("¿Qué formato tiene [A, B, B] (las tres una al lado de otra)? Responde los tamaños separados por comas.", "seq", "2,4", ["Filas: 2.", "Columnas: 2 + 1 + 1 = 4."], "2 × 4"),
+        T("¿Se puede pegar D debajo de B? (V/F)", "vf", "F", ["B tiene 1 columna y D tiene 2."], "F"),
+        T("Transpuesta de [[1, 2, 3], [4, 5, 6]]. Responde las componentes fila a fila.", "seq", "1,4,2,5,3,6", ["La original es 2 × 3; la transpuesta es 3 × 2: [[1, 4], [2, 5], [3, 6]]."], "[[1, 4], [2, 5], [3, 6]]"),
+        T("Si apilas cuatro matrices 3 × 2, ¿qué formato sale? Responde los tamaños separados por comas.", "seq", "4,3,2", ["El eje nuevo va delante: 4 × 3 × 2."], "4 × 3 × 2"),
+        T("¿Qué formato tiene la transpuesta de una matriz 4 × 7? Responde los tamaños separados por comas.", "seq", "7,4", ["Se intercambian filas y columnas."], "7 × 4")
+      ]
+    }
+  ],
+  py: `
+    <h4>Tensores en NumPy</h4>
+<pre><code>import numpy as np
+A = np.array([[1, 2], [3, 4]])
+print(A.shape)      # (2, 2)   formato
+print(A.ndim)       # 2        orden
+print(A.size)       # 4        componentes
+
+T = np.zeros((4, 3, 3))
+print(T.shape, T.ndim, T.size)   # (4, 3, 3) 3 36</code></pre>
+    <h4>Pegar, apilar y transponer</h4>
+<pre><code>A = np.array([[1, 2], [3, 4]])
+B = np.array([[5], [6]])
+D = np.array([[7, 8]])
+print(np.block([A, B]))        # al lado: 2×3
+print(np.block([[A], [D]]))    # debajo: 3×2
+print(np.stack([A, A, A]).shape)   # (3, 2, 2)  apilar crea un eje nuevo
+print(np.array([[7, 8], [9, 0], [1, 2]]).T)   # transpuesta</code></pre>`
+});
+
 /* ================= VERSIÓN PARA DUMMIES ================= */
 const EASY = {};
 
@@ -1509,6 +1591,46 @@ EASY.espacio = `
   <p>La <b>suma</b> de subespacios U + V es lo que generan juntos. Es suma <b>directa</b> (U ⊕ V) si solo comparten el cero.</p>
   <h4>1.4: lo "abstracto" (p. 63)</h4>
   <p>Las propiedades (EV1)–(EV8) (por ejemplo u + v = v + u y 1·u = u) son tan evidentes en K^I que se cumplen sin esfuerzo. Los manuales abstractos las toman como definición de "espacio vectorial". En esta asignatura solo se trabaja con los de tipo K^I, así que no hace falta más.</p>`;
+
+EASY.tensores = `
+  <h4>Un tensor es una tabla con etiquetas</h4>
+  <p>Piensa en una hoja de cálculo. Un <b>tensor</b> es una tabla de números, pero puede tener más de dos "direcciones" (ejes). Cada dirección es un <b>eje</b>.</p>
+  <ul>
+    <li>Un número suelto: orden 0 (un escalar).</li>
+    <li>Una lista de números, como [7, 8, 9]: orden 1, un solo eje. Es un vector.</li>
+    <li>Una tabla de filas y columnas: orden 2. Es una matriz.</li>
+    <li>Un montón de tablas: orden 3. Eso ya es un tensor "de verdad".</li>
+  </ul>
+  <h4>Formato, orden y dimensión: tres cosas distintas</h4>
+  <div class="tblwrap"><table>
+    <tr><th>Palabra</th><th>Qué es</th><th>Ejemplo con una tabla de 4 filas y 3 columnas</th></tr>
+    <tr><td><b>Orden</b></td><td>Cuántos ejes tiene</td><td class="m">2</td></tr>
+    <tr><td><b>Formato</b></td><td>Cuánto mide cada eje</td><td class="m">4 × 3</td></tr>
+    <tr><td><b>Dimensión</b></td><td>Cuántos números caben en total</td><td class="m">4·3 = 12</td></tr>
+  </table></div>
+  <p>Con un tensor 4 × 3 × 3: orden 3, y caben 4·3·3 = <b>36</b> números (multiplicas los tamaños).</p>
+  <div class="tip"><p>Error típico: confundir el orden con el total. El orden cuenta ejes (2, 3…); el total multiplica sus tamaños.</p></div>
+  <h4>Corchetes anidados: cómo se escribe</h4>
+  <p>Una matriz es una <b>lista de filas</b>: [[1, 2, 5], [3, 4, 6]]. Tiene 2 filas (dos corchetes interiores) y cada una tiene 3 números, así que su formato es 2 × 3.</p>
+  <p>Para un tensor de orden 3, se mete otro corchete: es una lista de matrices. El formato se lee de fuera hacia dentro: cuántos elementos tiene el corchete exterior, cuántos el siguiente, y cuántos el último.</p>
+  <h4>Pegar matrices (bloques)</h4>
+  <p>Pegar matrices es como pegar azulejos: tienen que encajar.</p>
+  <ul>
+    <li><b>Una al lado de otra:</b> tienen que tener las <b>mismas filas</b>. Las columnas se suman.</li>
+    <li><b>Una debajo de otra:</b> tienen que tener las <b>mismas columnas</b>. Las filas se suman.</li>
+  </ul>
+  <p>Ejemplo con A = [[1, 2], [3, 4]] (2×2), B = [[5], [6]] (2×1) y D = [[7, 8]] (1×2):</p>
+  <ul>
+    <li>[A, B]: las dos tienen 2 filas, así que encajan. Resultado [[1, 2, 5], [3, 4, 6]], de formato 2 × 3.</li>
+    <li>[[A], [D]]: las dos tienen 2 columnas. Resultado [[1, 2], [3, 4], [7, 8]], de formato 3 × 2.</li>
+    <li>B al lado de D: B tiene 2 filas y D tiene 1. No encajan.</li>
+  </ul>
+  <p>Truco para recordarlo: [A, B] es una fila con dos cajas (una al lado de otra). [[A], [B]] son dos filas con una caja cada una (una encima de otra).</p>
+  <h4>Apilar no es lo mismo que pegar</h4>
+  <p>Pegar sigue dando una tabla de dos ejes. <b>Apilar</b> pone las tablas una sobre otra como folios: aparece un eje nuevo. Cuatro matrices 3 × 2 apiladas dan un tensor 4 × 3 × 2 (el 4 es cuántas hay).</p>
+  <h4>Transpuesta: girar la tabla</h4>
+  <p>Aᵀ convierte las filas en columnas. Si A tiene formato n × m, Aᵀ tiene formato m × n. Ejemplo: [[7, 8], [9, 0], [1, 2]] es 3 × 2; su transpuesta es [[7, 9, 1], [8, 0, 2]], de 2 × 3. Cada columna de la original (7, 9, 1) pasa a ser una fila.</p>
+  <div class="note"><strong>Posible errata (p. 70):</strong> D = [9, 9, 2] aparece sin los corchetes de matriz; por el contexto debería ser D = [[9, 9, 2]].</div>`;
 
 /* ----- Pestaña 0: lo que el libro da por sabido ----- */
 TABS.unshift({
